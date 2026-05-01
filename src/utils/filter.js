@@ -1,5 +1,40 @@
+function normalizeSearchValue(value) {
+  return value
+    .toLowerCase()
+    .replace(/&/g, "and")
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim();
+}
+
+function searchVariants(value) {
+  const normalized = normalizeSearchValue(value);
+  const words = normalized.split(/\s+/).filter(Boolean);
+  const singularWords = words.map((word) => {
+    if (word.endsWith("ies") && word.length > 3) {
+      return `${word.slice(0, -3)}y`;
+    }
+
+    if (word.endsWith("s") && word.length > 1) {
+      return word.slice(0, -1);
+    }
+
+    return word;
+  });
+
+  return [normalized, singularWords.join(" ")].filter(Boolean);
+}
+
+function valuesMatchSearch(haystack, query) {
+  const haystackVariants = searchVariants(haystack);
+  const queryVariants = searchVariants(query);
+
+  return queryVariants.some((queryVariant) =>
+    haystackVariants.some((haystackVariant) => haystackVariant.includes(queryVariant))
+  );
+}
+
 export function filterCategories(categories, { searchTerm = "", activeCategory = "All" }) {
-  const query = searchTerm.trim().toLowerCase();
+  const query = searchTerm.trim();
   const shouldSearchAllCategories = query.length > 0;
 
   return categories
@@ -10,12 +45,14 @@ export function filterCategories(categories, { searchTerm = "", activeCategory =
         category.name === activeCategory
     )
     .map((category) => {
-      const items = query
+      const categoryMatches = query && valuesMatchSearch(category.name, query);
+      const items = categoryMatches
+        ? category.items
+        : query
         ? category.items.filter((item) => {
             const haystack = [item.name, item.description, ...(item.tags || [])]
-              .join(" ")
-              .toLowerCase();
-            return haystack.includes(query);
+              .join(" ");
+            return valuesMatchSearch(haystack, query);
           })
         : category.items;
 

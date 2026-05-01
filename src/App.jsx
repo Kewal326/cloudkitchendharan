@@ -16,6 +16,7 @@ function getCategoryFromUrl() {
 
 function updateCategoryUrl(category) {
   const url = new URL(window.location.href);
+  url.hash = "";
 
   if (category === "All") {
     url.searchParams.delete("category");
@@ -28,6 +29,15 @@ function updateCategoryUrl(category) {
 
   if (nextUrl !== currentUrl) {
     window.history.pushState({ category }, "", nextUrl);
+  }
+}
+
+function openCartUrl() {
+  const nextUrl = `${window.location.pathname}${window.location.search}#cart`;
+  const currentUrl = `${window.location.pathname}${window.location.search}${window.location.hash}`;
+
+  if (nextUrl !== currentUrl) {
+    window.history.pushState({ cartOpen: true }, "", nextUrl);
   }
 }
 
@@ -47,6 +57,7 @@ export default function App() {
 
   useEffect(() => {
     function handlePopState() {
+      setIsCartOpen(window.location.hash === "#cart");
       setSearchTerm("");
       setActiveCategory(getCategoryFromUrl());
     }
@@ -86,6 +97,18 @@ export default function App() {
     }
     setActiveCategory(category);
     updateCategoryUrl(category);
+  }
+
+  function openCart() {
+    setIsCartOpen(true);
+    openCartUrl();
+  }
+
+  function closeCart() {
+    setIsCartOpen(false);
+    if (window.location.hash === "#cart") {
+      window.history.back();
+    }
   }
 
   return (
@@ -130,7 +153,7 @@ export default function App() {
 
       <button
         type="button"
-        onClick={() => setIsCartOpen(true)}
+        onClick={openCart}
         className={`fixed bottom-4 left-3 right-3 z-40 flex h-12 items-center justify-center rounded-full bg-maroon text-sm font-black text-white shadow-soft lg:hidden ${
           cartShaking ? "animate-cart-shake" : ""
         }`}
@@ -146,7 +169,7 @@ export default function App() {
         onAdd={addItem}
         onRemove={removeItem}
         isOpen={isCartOpen}
-        onClose={() => setIsCartOpen(false)}
+        onClose={closeCart}
       />
       <ImagePreviewModal item={previewItem} onClose={() => setPreviewItem(null)} />
     </div>

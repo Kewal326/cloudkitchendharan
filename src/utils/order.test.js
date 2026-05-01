@@ -54,6 +54,28 @@ test("search filters by item name, description, and tags", () => {
   );
 });
 
+test("search matches category names with singular and plural terms", () => {
+  const bySingular = filterCategories(menuCategories, {
+    searchTerm: "beverage",
+    activeCategory: "All"
+  });
+  const byPlural = filterCategories(menuCategories, {
+    searchTerm: "beverages",
+    activeCategory: "All"
+  });
+  const byMultiWordSingular = filterCategories(menuCategories, {
+    searchTerm: "street snack",
+    activeCategory: "All"
+  });
+
+  assert.equal(bySingular.length, 1);
+  assert.equal(bySingular[0].name, "Beverages");
+  assert.equal(byPlural.length, 1);
+  assert.equal(byPlural[0].name, "Beverages");
+  assert.equal(byMultiWordSingular.length, 1);
+  assert.equal(byMultiWordSingular[0].name, "Street Snacks");
+});
+
 test("category filtering limits results to the selected category", () => {
   const filtered = filterCategories(menuCategories, {
     searchTerm: "",
