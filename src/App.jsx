@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Cart from "./components/Cart.jsx";
 import Header from "./components/Header.jsx";
 import ImagePreviewModal from "./components/ImagePreviewModal.jsx";
@@ -8,9 +8,32 @@ import { categoryNames, menuCategories } from "./data/menu.js";
 import { filterCategories } from "./utils/filter.js";
 import { changeQuantity, getCartCount } from "./utils/order.js";
 
+function getCategoryFromUrl() {
+  const params = new URLSearchParams(window.location.search);
+  const category = params.get("category");
+  return categoryNames.includes(category) ? category : "All";
+}
+
+function updateCategoryUrl(category) {
+  const url = new URL(window.location.href);
+
+  if (category === "All") {
+    url.searchParams.delete("category");
+  } else {
+    url.searchParams.set("category", category);
+  }
+
+  const nextUrl = `${url.pathname}${url.search}${url.hash}`;
+  const currentUrl = `${window.location.pathname}${window.location.search}${window.location.hash}`;
+
+  if (nextUrl !== currentUrl) {
+    window.history.pushState({ category }, "", nextUrl);
+  }
+}
+
 export default function App() {
   const [searchTerm, setSearchTerm] = useState("");
-  const [activeCategory, setActiveCategory] = useState("All");
+  const [activeCategory, setActiveCategory] = useState(getCategoryFromUrl);
   const [cart, setCart] = useState({});
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [cartShaking, setCartShaking] = useState(false);
@@ -21,6 +44,16 @@ export default function App() {
     [searchTerm, activeCategory]
   );
   const cartCount = getCartCount(cart);
+
+  useEffect(() => {
+    function handlePopState() {
+      setSearchTerm("");
+      setActiveCategory(getCategoryFromUrl());
+    }
+
+    window.addEventListener("popstate", handlePopState);
+    return () => window.removeEventListener("popstate", handlePopState);
+  }, []);
 
   function triggerCartShake() {
     setCartShaking(false);
@@ -41,6 +74,9 @@ export default function App() {
     setSearchTerm(value);
     if (value.trim()) {
       setActiveCategory("All");
+      if (activeCategory !== "All") {
+        updateCategoryUrl("All");
+      }
     }
   }
 
@@ -49,6 +85,7 @@ export default function App() {
       setSearchTerm("");
     }
     setActiveCategory(category);
+    updateCategoryUrl(category);
   }
 
   return (

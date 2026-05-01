@@ -1,3 +1,5 @@
+import { useEffect, useRef } from "react";
+
 export default function StickySearchCategories({
   categories,
   activeCategory,
@@ -5,6 +7,16 @@ export default function StickySearchCategories({
   onCategoryChange,
   onSearchChange
 }) {
+  const categoryButtonRefs = useRef({});
+
+  useEffect(() => {
+    categoryButtonRefs.current[activeCategory]?.scrollIntoView({
+      behavior: "smooth",
+      block: "nearest",
+      inline: "center"
+    });
+  }, [activeCategory]);
+
   return (
     <div className="sticky top-0 z-30 border-b border-maroon/10 bg-cream/95 backdrop-blur">
       <div className="mx-auto max-w-7xl px-3 py-2 sm:px-5">
@@ -29,6 +41,9 @@ export default function StickySearchCategories({
             return (
               <button
                 key={category}
+                ref={(button) => {
+                  categoryButtonRefs.current[category] = button;
+                }}
                 type="button"
                 onClick={() => onCategoryChange(category)}
                 className={`shrink-0 rounded-full border px-3 py-1.5 text-sm font-bold transition ${
