@@ -58,6 +58,14 @@ export function formatWhatsAppOrder({ cart, notes, total }) {
   ].join("\n");
 }
 
+export function formatWhatsAppChat() {
+  return [
+    "Namaste Cloud Kitchen, I would like to know more before placing an order.",
+    "",
+    "Please share availability and delivery details."
+  ].join("\n");
+}
+
 export function getWhatsAppUrl(orderText) {
   return `https://wa.me/${WHATSAPP_PHONE}?text=${encodeURIComponent(orderText)}`;
 }

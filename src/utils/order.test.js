@@ -2,7 +2,12 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { menuCategories } from "../data/menu.js";
 import { filterCategories } from "./filter.js";
-import { changeQuantity, getCartCount, getCartTotal } from "./order.js";
+import {
+  changeQuantity,
+  formatWhatsAppChat,
+  getCartCount,
+  getCartTotal
+} from "./order.js";
 
 const burger = menuCategories[0].items.find((item) => item.name === "Veg Burger (1 pc)");
 const paneer = menuCategories[0].items.find(
@@ -91,4 +96,8 @@ test("item quantity logic increments, decrements, and removes at zero", () => {
 
   cart = changeQuantity(cart, burger, -1);
   assert.equal(cart[burger.id], undefined);
+});
+
+test("empty cart WhatsApp chat message starts a conversation", () => {
+  assert.match(formatWhatsAppChat(), /know more before placing an order/);
 });

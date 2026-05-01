@@ -1,13 +1,14 @@
 import { useMemo, useState } from "react";
 import {
   PRIMARY_PHONE,
+  formatWhatsAppChat,
   formatWhatsAppOrder,
   getCartTotal,
   getWhatsAppUrl,
   price
 } from "../utils/order.js";
 
-function CartContent({ cart, onAdd, onRemove }) {
+function CartContent({ cart, onAdd, onRemove, onClose }) {
   const [notes, setNotes] = useState("");
   const items = Object.values(cart);
   const total = getCartTotal(cart);
@@ -15,14 +16,29 @@ function CartContent({ cart, onAdd, onRemove }) {
     () => formatWhatsAppOrder({ cart, notes, total }),
     [cart, notes, total]
   );
+  const whatsAppText = items.length ? orderText : formatWhatsAppChat();
 
   return (
     <div className="flex max-h-[86vh] flex-col">
       <div className="border-b border-maroon/10 p-4">
-        <h2 className="text-lg font-black text-maroon-dark">Your order</h2>
-        <p className="mt-0.5 text-sm text-stone-700">
-          Pay after confirmation. Order by WhatsApp or call directly.
-        </p>
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <h2 className="text-lg font-black text-maroon-dark">Your order</h2>
+            <p className="mt-0.5 text-sm text-stone-700">
+              Pay after confirmation. Order by WhatsApp or call directly.
+            </p>
+          </div>
+          {onClose ? (
+            <button
+              type="button"
+              onClick={onClose}
+              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-maroon/15 bg-white text-2xl font-black leading-none text-maroon shadow-sm"
+              aria-label="Close cart"
+            >
+              &times;
+            </button>
+          ) : null}
+        </div>
       </div>
 
       <div className="flex-1 overflow-y-auto p-4">
@@ -86,15 +102,10 @@ function CartContent({ cart, onAdd, onRemove }) {
           Delivery charges may apply based on delivery location.
         </p>
         <a
-          href={items.length ? getWhatsAppUrl(orderText) : undefined}
+          href={getWhatsAppUrl(whatsAppText)}
           target="_blank"
           rel="noreferrer"
-          aria-disabled={!items.length}
-          className={`flex h-11 items-center justify-center rounded-full text-sm font-black ${
-            items.length
-              ? "bg-maroon text-white hover:bg-maroon-dark"
-              : "pointer-events-none bg-stone-200 text-stone-500"
-          }`}
+          className="flex h-11 items-center justify-center rounded-full bg-maroon text-sm font-black text-white hover:bg-maroon-dark"
         >
           Order on WhatsApp
         </a>
@@ -148,7 +159,7 @@ export default function Cart({
         }`}
       >
         <div className="mx-auto mt-2 h-1.5 w-12 rounded-full bg-maroon/20" />
-        <CartContent cart={cart} onAdd={onAdd} onRemove={onRemove} />
+        <CartContent cart={cart} onAdd={onAdd} onRemove={onRemove} onClose={onClose} />
       </div>
     </div>
   );
