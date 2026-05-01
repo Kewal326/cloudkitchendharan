@@ -1,6 +1,6 @@
 export const PRIMARY_PHONE = "9812356907";
 export const SECONDARY_PHONE = "9709206037";
-export const WHATSAPP_PHONE = "919812356907";
+export const WHATSAPP_PHONE = "9779812356907";
 
 export const price = (value) => `Rs.${value}`;
 
