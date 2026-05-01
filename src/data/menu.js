@@ -87,6 +87,7 @@ const categories = [
       ["Butter Tawa Roti (1 pc)", 80, "Tawa roti brushed with butter.", ["roti", "butter", "bread"]],
       ["Aloo Paratha (1 pc)", 120, "Stuffed potato paratha with homestyle spices.", ["paratha", "aloo", "bread"]],
       ["Plain Paratha (1 pc)", 100, "Layered plain paratha cooked on tawa.", ["paratha", "bread", "tawa"]],
+      ["Aloo Stuffed Kulcha", 200, "Soft kulcha stuffed with spiced potato filling.", ["kulcha", "aloo", "bread"]],
       ["Poori Tarkari (4Pcs)", 200, "Four puffed pooris served with homestyle potato tarkari.", ["poori", "tarkari", "bread"]],
       ["Pyaaz Paratha", 120, "Tawa-cooked paratha stuffed with spiced onion filling.", ["paratha", "pyaaz", "onion", "bread"]],
       ["Sattu Paratha", 120, "Stuffed paratha filled with roasted sattu masala.", ["paratha", "sattu", "bread"]]
@@ -106,6 +107,7 @@ const categories = [
     items: [
       ["Paneer Butter Masala", 450, "Paneer cubes simmered in rich buttery tomato gravy.", ["paneer", "sabji", "curry"]],
       ["Kadhai Paneer", 500, "Paneer cooked with capsicum and kadhai masala.", ["paneer", "sabji", "spicy"]],
+      ["Matar Paneer", 500, "Paneer and green peas cooked in a homestyle spiced gravy.", ["paneer", "matar", "sabji"]],
       ["Sahi Paneer", 400, "Creamy paneer gravy with a mild royal-style base.", ["paneer", "creamy", "sabji"]],
       ["Malai Kofta", 500, "Soft kofta dumplings served in creamy gravy.", ["kofta", "malai", "sabji"]],
       ["Plain Dal", 120, "Simple yellow dal, light and comforting.", ["dal", "comfort", "simple"]],

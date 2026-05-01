@@ -82,6 +82,9 @@ function CartContent({ cart, onAdd, onRemove }) {
           <span>Total</span>
           <span>{price(total)}</span>
         </div>
+        <p className="mb-3 rounded-md bg-amber-50 px-3 py-2 text-xs font-semibold leading-5 text-maroon/80">
+          Delivery charges may apply based on delivery location.
+        </p>
         <a
           href={items.length ? getWhatsAppUrl(orderText) : undefined}
           target="_blank"

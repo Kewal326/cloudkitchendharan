@@ -52,6 +52,8 @@ export function formatWhatsAppOrder({ cart, notes, total }) {
     "",
     `Total: ${price(total)}`,
     "",
+    "Delivery charges may apply based on delivery location.",
+    "",
     "Delivery/Pickup: Please confirm availability and timing."
   ].join("\n");
 }
