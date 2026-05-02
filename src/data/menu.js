@@ -2,20 +2,26 @@ const categories = [
   {
     name: "Popular",
     items: [
-      ["Veg Burger (1 pc)", 300, "Veg patty burger with cheese, lettuce, and house sauce.", ["burger", "snack", "kids"]],
-      ["Paneer Butter Masala", 450, "Paneer cubes simmered in rich buttery tomato gravy.", ["paneer", "sabji", "curry"]],
-      ["Mix Veg Pizza", 600, "Cheesy pizza topped with capsicum, corn, onion, and vegetables.", ["pizza", "cheese", "popular"]],
-      ["Sabudana Khichdi", 350, "Light vrat-friendly sabudana with peanuts, potato, and herbs.", ["vrat", "fasting", "sabudana"]]
+      ["Veg Burger (1 pc)", 300, "Veg patty burger with cheese, lettuce, and house sauce.", ["burger", "snack", "kids", "best seller"]],
+      ["French Fries (Peri Peri / Salty)", 150, "Crisp fries tossed salty or peri peri, served hot.", ["fries", "potato", "snack"]],
+      ["Paneer Butter Masala", 450, "Paneer cubes simmered in rich buttery tomato gravy.", ["paneer", "sabji", "curry", "best seller"]],
+      ["Aloo Sandwich (1 pc)", 100, "Grilled potato masala sandwich with chutney.", ["sandwich", "potato", "budget"]],
+      ["Mix Veg Pizza", 600, "Cheesy pizza topped with capsicum, corn, onion, and vegetables.", ["pizza", "cheese", "popular", "best seller"]],
+      ["Jhol Momo", 250, "Vegetarian momos served in warm spicy jhol sauce.", ["momo", "jhol", "snack"]],
+      ["Sabudana Khichdi", 350, "Light vrat-friendly sabudana with peanuts, potato, and herbs.", ["vrat", "fasting", "sabudana", "best seller"]],
+      ["Garlic Naan (1 pc)", 120, "Naan topped with garlic and herbs.", ["naan", "garlic", "bread"]],
+      ["Jeera Rice", 150, "Basmati-style rice tempered with cumin.", ["rice", "jeera", "simple"]],
+      ["Virgin Mojito", 215, "Minty virgin mojito refresher.", ["mojito", "mint", "cold drink"]]
     ]
   },
   {
     name: "Street Snacks",
     items: [
-      ["Vada Pau (1 pc)", 150, "Mumbai-style potato vada in soft pau with chutney.", ["snack", "street food", "potato"]],
+      ["Vada Pau (1 pc)", 150, "Mumbai-style potato vada in soft pau with chutney.", ["snack", "street food", "potato", "best seller"]],
       ["French Fries (Peri Peri / Salty)", 150, "Crisp fries tossed salty or peri peri, served hot.", ["fries", "potato", "snack"]],
-      ["Nachos With Salsa", 250, "Crunchy nachos served with bright tomato salsa.", ["nachos", "salsa", "sharing"]],
+      ["Nachos With Salsa", 250, "Crunchy nachos served with bright tomato salsa.", ["nachos", "salsa", "sharing", "best seller"]],
       ["Sweet Corn Chaat", 300, "Sweet corn tossed with masala, lime, and herbs.", ["corn", "chaat", "light"]],
-      ["Crispy Corn", 250, "Golden fried corn kernels with peppery seasoning.", ["corn", "crispy", "sharing"]],
+      ["Crispy Corn", 250, "Golden fried corn kernels with peppery seasoning.", ["corn", "crispy", "sharing", "best seller"]],
       ["Poha", 200, "Flattened rice cooked with peanuts, potato, and mild spices.", ["breakfast", "light", "snack"]],
       ["Vegetable Pakora", 300, "Mixed vegetable fritters fried crisp and golden.", ["pakora", "fried", "starter"]],
       ["Aloo Chop (5 pcs)", 150, "Five potato chops with a crisp spiced coating.", ["potato", "fried", "snack"]],
@@ -28,10 +34,10 @@ const categories = [
   {
     name: "Burgers, Rolls & Sandwiches",
     items: [
-      ["Veg Burger (1 pc)", 300, "Veg patty burger with cheese, lettuce, and house sauce.", ["burger", "snack", "kids"]],
-      ["Cheese Sandwich (1 pc)", 220, "Grilled sandwich layered with melted cheese.", ["sandwich", "cheese", "snack"]],
+      ["Veg Burger (1 pc)", 300, "Veg patty burger with cheese, lettuce, and house sauce.", ["burger", "snack", "kids", "best seller"]],
+      ["Cheese Sandwich (1 pc)", 220, "Grilled sandwich layered with melted cheese.", ["sandwich", "cheese", "snack", "best seller"]],
       ["Aloo Sandwich (1 pc)", 100, "Grilled potato masala sandwich with chutney.", ["sandwich", "potato", "budget"]],
-      ["Club Sandwich", 350, "Layered vegetarian club sandwich with cheese and vegetables.", ["sandwich", "club", "cheese"]],
+      ["Club Sandwich", 350, "Layered vegetarian club sandwich with cheese and vegetables.", ["sandwich", "club", "cheese", "best seller"]],
       ["Veg Katti Roll", 320, "Flaky wrap filled with spiced vegetables and chutney.", ["roll", "wrap", "snack"]],
       ["Aloo Katti Roll", 280, "Flaky wrap filled with potato masala and chutney.", ["roll", "potato", "wrap"]]
     ]
@@ -39,11 +45,11 @@ const categories = [
   {
     name: "Chinese & Momos",
     items: [
-      ["Veg Chowmin", 180, "Stir-fried noodles with fresh vegetables and sauces.", ["noodles", "chinese", "quick"]],
+      ["Veg Chowmin", 180, "Stir-fried noodles with fresh vegetables and sauces.", ["noodles", "chinese", "quick", "best seller"]],
       ["Veg Lollipop", 300, "Crispy vegetable lollipops with Indo-Chinese flavor.", ["chinese", "crispy", "starter"]],
       ["Spring Rolls", 380, "Crisp rolls filled with seasoned vegetables.", ["rolls", "chinese", "starter"]],
-      ["Chinese Bhel", 450, "Crunchy noodles tossed with vegetables and tangy sauces.", ["chinese", "bhel", "spicy"]],
-      ["Momo", 120, "Steamed vegetarian momos served with spicy chutney.", ["momo", "snack", "veg"]],
+      ["Chinese Bhel", 450, "Crunchy noodles tossed with vegetables and tangy sauces.", ["chinese", "bhel", "spicy", "best seller"]],
+      ["Momo", 120, "Steamed vegetarian momos served with spicy chutney.", ["momo", "snack", "veg", "best seller"]],
       ["Jhol Momo", 250, "Vegetarian momos served in warm spicy jhol sauce.", ["momo", "jhol", "snack"]],
       ["Paneer Chilli", 400, "Paneer cubes tossed with capsicum and Indo-Chinese chilli sauce.", ["paneer", "chilli", "chinese"]],
       ["Potato Chilli", 350, "Crispy potatoes tossed in Indo-Chinese chilli sauce.", ["potato", "chilli", "chinese"]]
@@ -52,15 +58,15 @@ const categories = [
   {
     name: "Pizza & Pasta",
     items: [
-      ["Mix Veg Pizza", 600, "Cheesy pizza topped with capsicum, corn, onion, and vegetables.", ["pizza", "cheese", "popular"]],
+      ["Mix Veg Pizza", 600, "Cheesy pizza topped with capsicum, corn, onion, and vegetables.", ["pizza", "cheese", "popular", "best seller"]],
       ["Paneer Pizza", 650, "Pizza loaded with paneer, vegetables, and cheese.", ["pizza", "paneer", "cheese"]],
-      ["Cheese Pizza", 500, "Simple cheese pizza with a golden melted top.", ["pizza", "cheese", "kids"]],
+      ["Cheese Pizza", 500, "Simple cheese pizza with a golden melted top.", ["pizza", "cheese", "kids", "best seller"]],
       ["Sweet Corn Pizza", 600, "Cheesy pizza topped generously with sweet corn.", ["pizza", "corn", "cheese"]],
-      ["Kulhad Pizza", 280, "Creamy pizza-style vegetables and cheese served in a kulhad.", ["pizza", "kulhad", "cheese", "snack"]],
+      ["Kulhad Pizza", 280, "Creamy pizza-style vegetables and cheese served in a kulhad.", ["pizza", "kulhad", "cheese", "snack", "best seller"]],
       ["Bun Pizza", 250, "Mini bun pizza with vegetables and melted cheese.", ["pizza", "bun", "snack"]],
       ["Bread Pizza", 300, "Crisp bread pizza topped with sauce, cheese, and vegetables.", ["pizza", "bread", "snack"]],
       ["Pasta Pizza Sticks (5 Sticks)", 400, "Five cheesy pizza sticks stuffed with pasta flavors.", ["pizza", "sticks", "cheese"]],
-      ["Red Sauce Pasta", 400, "Pasta tossed in tangy tomato sauce with vegetables.", ["pasta", "italian", "tomato"]],
+      ["Red Sauce Pasta", 400, "Pasta tossed in tangy tomato sauce with vegetables.", ["pasta", "italian", "tomato", "best seller"]],
       ["White Sauce Pasta", 450, "Creamy white sauce pasta with vegetables and herbs.", ["pasta", "cream", "cheese"]],
       ["Extra Cheese", 80, "Extra cheese add-on for pizzas and snacks.", ["add on", "cheese", "extra"]]
     ]
@@ -68,27 +74,27 @@ const categories = [
   {
     name: "South Indian & Chilla",
     items: [
-      ["Masala Dosa", 200, "Crisp dosa filled with spiced potato masala, served with chutney and sambar.", ["dosa", "masala", "south indian"]],
+      ["Masala Dosa", 200, "Crisp dosa filled with spiced potato masala, served with chutney and sambar.", ["dosa", "masala", "south indian", "best seller"]],
       ["Idli Sambar", 300, "Soft idli served with vegetable sambar.", ["idli", "sambar", "south indian"]],
       ["Masala Idli", 250, "Idli tossed with vegetables and South Indian masala.", ["idli", "south indian", "snack"]],
       ["Plain Moong Daal Chilla", 180, "Protein-rich plain moong daal chilla served with chutney.", ["chilla", "moong", "snack"]],
-      ["Paneer Stuffed Moong Daal Chilla", 250, "Moong daal chilla stuffed with paneer filling.", ["chilla", "moong", "paneer"]]
+      ["Paneer Stuffed Moong Daal Chilla", 250, "Moong daal chilla stuffed with paneer filling.", ["chilla", "moong", "paneer", "best seller"]]
     ]
   },
   {
     name: "Breads",
     items: [
       ["Plain Naan (1 pc)", 80, "Soft plain naan, perfect with paneer and dal.", ["naan", "bread", "tandoor"]],
-      ["Butter Naan (1 pc)", 100, "Soft naan brushed with butter.", ["naan", "butter", "bread"]],
+      ["Butter Naan (1 pc)", 100, "Soft naan brushed with butter.", ["naan", "butter", "bread", "best seller"]],
       ["Garlic Naan (1 pc)", 120, "Naan topped with garlic and herbs.", ["naan", "garlic", "bread"]],
       ["Plain Fulka (1 pc)", 50, "Light home-style fulka.", ["fulka", "roti", "bread"]],
       ["Butter Fulka (1 pc)", 70, "Home-style fulka finished with butter.", ["fulka", "butter", "bread"]],
       ["Tawa Roti (1 pc)", 60, "Fresh roti cooked on tawa.", ["roti", "tawa", "bread"]],
       ["Butter Tawa Roti (1 pc)", 80, "Tawa roti brushed with butter.", ["roti", "butter", "bread"]],
-      ["Aloo Paratha (1 pc)", 120, "Stuffed potato paratha with homestyle spices.", ["paratha", "aloo", "bread"]],
+      ["Aloo Paratha (1 pc)", 120, "Stuffed potato paratha with homestyle spices.", ["paratha", "aloo", "bread", "best seller"]],
       ["Plain Paratha (1 pc)", 100, "Layered plain paratha cooked on tawa.", ["paratha", "bread", "tawa"]],
       ["Aloo Stuffed Kulcha", 200, "Soft kulcha stuffed with spiced potato filling.", ["kulcha", "aloo", "bread"]],
-      ["Poori Tarkari (4Pcs)", 200, "Four puffed pooris served with homestyle potato tarkari.", ["poori", "tarkari", "bread"]],
+      ["Poori Tarkari (4Pcs)", 200, "Four puffed pooris served with homestyle potato tarkari.", ["poori", "tarkari", "bread", "best seller"]],
       ["Pyaaz Paratha", 120, "Tawa-cooked paratha stuffed with spiced onion filling.", ["paratha", "pyaaz", "onion", "bread"]],
       ["Sattu Paratha", 120, "Stuffed paratha filled with roasted sattu masala.", ["paratha", "sattu", "bread"]]
     ]
@@ -98,16 +104,16 @@ const categories = [
     items: [
       ["Jeera Rice", 150, "Basmati-style rice tempered with cumin.", ["rice", "jeera", "simple"]],
       ["Plain Rice", 100, "Steamed rice for dal and curries.", ["rice", "plain", "comfort"]],
-      ["Fry Rice", 190, "Vegetable fried rice with Indo-Chinese seasoning.", ["rice", "chinese", "vegetables"]],
-      ["Pulao", 300, "Fragrant vegetable pulao with gentle spices.", ["rice", "pulao", "vegetables"]]
+      ["Fry Rice", 190, "Vegetable fried rice with Indo-Chinese seasoning.", ["rice", "chinese", "vegetables", "best seller"]],
+      ["Pulao", 300, "Fragrant vegetable pulao with gentle spices.", ["rice", "pulao", "vegetables", "best seller"]]
     ]
   },
   {
     name: "Sabji",
     items: [
-      ["Paneer Butter Masala", 450, "Paneer cubes simmered in rich buttery tomato gravy.", ["paneer", "sabji", "curry"]],
-      ["Kadhai Paneer", 500, "Paneer cooked with capsicum and kadhai masala.", ["paneer", "sabji", "spicy"]],
-      ["Matar Paneer", 500, "Paneer and green peas cooked in a homestyle spiced gravy.", ["paneer", "matar", "sabji"]],
+      ["Paneer Butter Masala", 450, "Paneer cubes simmered in rich buttery tomato gravy.", ["paneer", "sabji", "curry", "best seller"]],
+      ["Kadhai Paneer", 500, "Paneer cooked with capsicum and kadhai masala.", ["paneer", "sabji", "spicy", "best seller"]],
+      ["Matar Paneer", 500, "Paneer and green peas cooked in a homestyle spiced gravy.", ["paneer", "matar", "sabji", "best seller"]],
       ["Sahi Paneer", 400, "Creamy paneer gravy with a mild royal-style base.", ["paneer", "creamy", "sabji"]],
       ["Malai Kofta", 500, "Soft kofta dumplings served in creamy gravy.", ["kofta", "malai", "sabji"]],
       ["Plain Dal", 120, "Simple yellow dal, light and comforting.", ["dal", "comfort", "simple"]],
@@ -115,21 +121,21 @@ const categories = [
       ["Seasonal Vegetable", 250, "Fresh seasonal vegetable sabji cooked homestyle.", ["sabji", "seasonal", "vegetables"]],
       ["Aloo Sabji", 100, "Simple potato sabji with mild spices.", ["aloo", "potato", "sabji"]],
       ["Aloo Jeera", 250, "Potatoes tossed with cumin and spices.", ["aloo", "jeera", "sabji"]],
-      ["Aloo Dum", 300, "Potatoes simmered in spicy dum-style gravy.", ["aloo", "dum", "sabji"]],
+      ["Aloo Dum", 300, "Potatoes simmered in spicy dum-style gravy.", ["aloo", "dum", "sabji", "best seller"]],
       ["Plain Kadhi", 200, "Classic yogurt kadhi with gentle spices.", ["kadhi", "comfort", "curd"]],
-      ["Pakora Kadhi", 250, "Kadhi served with soft pakora pieces.", ["kadhi", "pakora", "comfort"]]
+      ["Pakora Kadhi", 250, "Kadhi served with soft pakora pieces.", ["kadhi", "pakora", "comfort", "best seller"]]
     ]
   },
   {
     name: "Vrat Menu",
     items: [
-      ["Sabudana Khichdi", 350, "Light vrat-friendly sabudana with peanuts, potato, and herbs.", ["vrat", "fasting", "sabudana"]],
+      ["Sabudana Khichdi", 350, "Light vrat-friendly sabudana with peanuts, potato, and herbs.", ["vrat", "fasting", "sabudana", "best seller"]],
       ["Aloo Tikki", 150, "Crisp potato tikki for fasting-friendly cravings.", ["vrat", "aloo", "tikki"]],
-      ["Aloo Peanut Chaat", 300, "Potato and peanut chaat with lime and herbs.", ["vrat", "peanut", "chaat"]],
+      ["Aloo Peanut Chaat", 300, "Potato and peanut chaat with lime and herbs.", ["vrat", "peanut", "chaat", "best seller"]],
       ["Makhana Roasted", 200, "Light roasted makhana with mild seasoning.", ["vrat", "makhana", "snack"]],
       ["Tomato Chutney", 150, "Tangy tomato chutney for vrat meals.", ["vrat", "tomato", "chutney"]],
       ["Aloo Chips", 100, "Crisp potato chips for a light bite.", ["vrat", "chips", "potato"]],
-      ["Fafar Roti (per pc)", 90, "Fafar roti made for fasting plates.", ["vrat", "fafar", "bread"]],
+      ["Fafar Roti (per pc)", 90, "Fafar roti made for fasting plates.", ["vrat", "fafar", "bread", "best seller"]],
       ["Falhar Aloo Sabji", 250, "Fasting-style potato sabji with simple spices.", ["vrat", "aloo", "sabji"]],
       ["French Fries", 150, "Classic crisp fries, served hot.", ["vrat", "fries", "potato"]],
       ["Paneer Tikka", 450, "Marinated paneer tikka with smoky spices.", ["vrat", "paneer", "tikka"]],
@@ -142,8 +148,8 @@ const categories = [
       ["Aloo Sabudana Tikki", 350, "Crisp tikki made with potato and sabudana.", ["vrat", "sabudana", "tikki"]],
       ["Paneer Sabji With Tomato", 450, "Paneer sabji cooked with tomato gravy.", ["vrat", "paneer", "tomato"]],
       ["Paneer Sabji Without Tomato", 500, "Paneer sabji prepared without tomato.", ["vrat", "paneer", "no tomato"]],
-      ["Aloo Seera", 450, "Sweet fasting-style aloo seera.", ["vrat", "sweet", "aloo"]],
-      ["Sabudana Kheer", 500, "Sweet sabudana kheer with creamy texture.", ["vrat", "sweet", "kheer"]],
+      ["Aloo Seera", 450, "Sweet fasting-style aloo seera.", ["vrat", "sweet", "aloo", "best seller"]],
+      ["Sabudana Kheer", 500, "Sweet sabudana kheer with creamy texture.", ["vrat", "sweet", "kheer", "best seller"]],
       ["Makhana Kheer", 500, "Creamy makhana kheer for vrat dessert.", ["vrat", "makhana", "kheer"]],
       ["Fruit Salad", 450, "Fresh seasonal fruit salad.", ["vrat", "fruit", "salad"]],
       ["Salad", 280, "Fresh salad plate for a lighter meal.", ["vrat", "salad", "fresh"]]
@@ -152,13 +158,13 @@ const categories = [
   {
     name: "Waffles",
     items: [
-      ["Dark Desire Waffle Slice", 200, "Tree O' Slice waffle with rich dark chocolate flavor.", ["waffle", "dessert", "chocolate"]],
+      ["Dark Desire Waffle Slice", 200, "Tree O' Slice waffle with rich dark chocolate flavor.", ["waffle", "dessert", "chocolate", "best seller"]],
       ["Milky Bliss Waffle Slice", 200, "Tree O' Slice waffle with creamy milky sweetness.", ["waffle", "dessert", "milk"]],
       ["Snow White Indulgence Waffle Slice", 225, "Tree O' Slice waffle with white chocolate indulgence.", ["waffle", "dessert", "white chocolate"]],
-      ["Choco Trio Fantasy Waffle Slice", 250, "Tree O' Slice waffle with a trio of chocolate flavors.", ["waffle", "dessert", "chocolate"]],
+      ["Choco Trio Fantasy Waffle Slice", 250, "Tree O' Slice waffle with a trio of chocolate flavors.", ["waffle", "dessert", "chocolate", "best seller"]],
       ["Chip Crunch Delight Waffle Slice", 225, "Tree O' Slice waffle with crunchy chocolate chips.", ["waffle", "dessert", "choco chips"]],
-      ["KitKat Krunch Waffle Slice", 225, "Tree O' Slice waffle topped with KitKat crunch.", ["waffle", "dessert", "kitkat"]],
-      ["Oreo Dream Stick Waffle Slice", 240, "Tree O' Slice waffle with Oreo crumble and cream.", ["waffle", "dessert", "oreo"]],
+      ["KitKat Krunch Waffle Slice", 225, "Tree O' Slice waffle topped with KitKat crunch.", ["waffle", "dessert", "kitkat", "best seller"]],
+      ["Oreo Dream Stick Waffle Slice", 240, "Tree O' Slice waffle with Oreo crumble and cream.", ["waffle", "dessert", "oreo", "best seller"]],
       ["Rainbow Gems Magic Waffle Slice", 215, "Tree O' Slice waffle with colorful gems topping.", ["waffle", "dessert", "gems"]],
       ["Royal Nutty Almond Waffle Slice", 225, "Tree O' Slice waffle with almond and nutty crunch.", ["waffle", "dessert", "almond"]],
       ["Golden Crunch Peanut Waffle Slice", 215, "Tree O' Slice waffle with roasted peanut crunch.", ["waffle", "dessert", "peanut"]],
