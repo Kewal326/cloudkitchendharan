@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://cloudkitchendharan.pages.dev/sitemap.xml

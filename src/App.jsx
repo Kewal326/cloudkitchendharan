@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import Cart from "./components/Cart.jsx";
+import Footer from "./components/Footer.jsx";
 import Header from "./components/Header.jsx";
 import ImagePreviewModal from "./components/ImagePreviewModal.jsx";
 import MenuSection from "./components/MenuSection.jsx";
@@ -150,6 +151,8 @@ export default function App() {
 
         <Cart cart={cart} onAdd={addItem} onRemove={removeItem} desktop />
       </main>
+
+      <Footer />
 
       <button
         type="button"
