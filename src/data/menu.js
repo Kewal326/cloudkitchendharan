@@ -127,7 +127,7 @@ const categories = [
     ]
   },
   {
-    name: "Vrat Menu",
+    name: "Satvik / Vrat Menu",
     items: [
       ["Sabudana Khichdi", 350, "Light vrat-friendly sabudana with peanuts, potato, and herbs.", ["vrat", "fasting", "sabudana", "best seller"]],
       ["Aloo Tikki", 150, "Crisp potato tikki for fasting-friendly cravings.", ["vrat", "aloo", "tikki"]],

@@ -32,7 +32,7 @@ export default function StickySearchCategories({
         />
 
         <p className="mt-2 inline-flex rounded-full bg-white px-3 py-1 text-xs font-bold text-maroon/75 ring-1 ring-maroon/10">
-          🧄 No onion/garlic available on request
+          Satvik, no onion/garlic on request
         </p>
 
         <div className="no-scrollbar mt-2 flex gap-2 overflow-x-auto pb-1">

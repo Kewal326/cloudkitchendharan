@@ -16,14 +16,8 @@ export default function Header() {
             <p className="truncate text-xl font-black tracking-normal text-maroon sm:text-2xl">
               Cloud Kitchen
             </p>
-            <p className="mt-0.5 flex min-w-0 items-center gap-1 text-[10px] font-black uppercase leading-none tracking-normal text-green-700 sm:text-[11px]">
-              <span
-                className="inline-flex h-3.5 w-3.5 items-center justify-center rounded-[2px] border border-green-700"
-                aria-hidden="true"
-              >
-                <span className="h-1.5 w-1.5 rounded-full bg-green-700" />
-              </span>
-              <span className="truncate">100% Vegetarian</span>
+            <p className="mt-0.5 min-w-0 truncate text-[10px] font-black uppercase leading-none tracking-normal text-green-700 sm:text-[11px]">
+              <span className="truncate">Veg Food Delivery Dharan</span>
             </p>
           </div>
         </div>

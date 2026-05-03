@@ -8,17 +8,18 @@ export default function Footer() {
           <div>
             <p className="text-lg font-black text-maroon-dark">Cloud Kitchen Dharan</p>
             <p className="mt-1 leading-6">
-              100% vegetarian cloud kitchen serving food delivery and pickup in Dharan.
-              Order snacks, momos, pizza, sabji, breads, waffles, tea, coffee, and shakes.
+              Vegetarian food delivery in Dharan from a 100% vegetarian cloud kitchen.
+              Order satvik meals, snacks, momos, pizza, sabji, breads, waffles, tea,
+              coffee, and shakes.
             </p>
           </div>
 
           <div>
             <p className="font-black text-maroon-dark">Service</p>
             <ul className="mt-2 space-y-1.5 leading-5">
-              <li>Home delivery all over Dharan</li>
+              <li>Vegetarian food delivery in Dharan</li>
               <li>Pickup available</li>
-              <li>No onion/garlic available on request</li>
+              <li>No onion, no garlic meals available on request</li>
             </ul>
           </div>
 
