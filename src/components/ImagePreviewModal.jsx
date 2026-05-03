@@ -1,3 +1,5 @@
+import { menuImageAlt } from "../utils/seo.js";
+
 export default function ImagePreviewModal({ item, onClose }) {
   if (!item) {
     return null;
@@ -14,7 +16,7 @@ export default function ImagePreviewModal({ item, onClose }) {
       <div className="relative w-full max-w-sm overflow-hidden rounded-lg bg-white shadow-soft">
         <img
           src={item.image}
-          alt={item.name}
+          alt={menuImageAlt(item)}
           className="aspect-square w-full object-cover"
           onError={(event) => {
             event.currentTarget.onerror = null;

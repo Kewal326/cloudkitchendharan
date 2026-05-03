@@ -7,7 +7,7 @@ export default function Header() {
         <div className="flex min-w-0 flex-1 items-center gap-2">
           <img
             src="/images/brand/cloud-kitchen-logo.png"
-            alt=""
+            alt="Cloud Kitchen Dharan logo"
             className="h-10 w-10 shrink-0 rounded-full border border-maroon/10 bg-white object-cover shadow-sm"
             width="40"
             height="40"

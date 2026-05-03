@@ -1,4 +1,5 @@
 import { price } from "../utils/order.js";
+import { menuImageAlt } from "../utils/seo.js";
 
 function RatingStar({ fill }) {
   const clipId = `rating-star-${fill}`;
@@ -109,7 +110,7 @@ export default function MenuItemRow({ item, quantity, onAdd, onRemove, onImageCl
       >
         <img
           src={item.image}
-          alt={item.name}
+          alt={menuImageAlt(item)}
           loading="lazy"
           className="h-full w-full object-cover"
           onError={(event) => {
