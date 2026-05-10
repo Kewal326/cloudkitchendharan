@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="900" viewBox="0 0 900 900" role="img" aria-labelledby="title desc">
+  <title id="title">Access denied medical quiz meme</title>
+  <desc id="desc">A meme-style illustration showing an exam paper judging a wrong answer.</desc>
+  <rect width="900" height="900" fill="#111827"/>
+  <rect x="52" y="52" width="796" height="796" rx="34" fill="#fff8f1"/>
+  <text x="450" y="130" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="64" font-weight="900" fill="#7f1d1d">ACCESS DENIED</text>
+  <rect x="245" y="205" width="410" height="480" rx="26" fill="#ffffff" stroke="#5f1717" stroke-width="12"/>
+  <rect x="295" y="270" width="230" height="28" rx="14" fill="#f59e0b"/>
+  <rect x="295" y="325" width="310" height="22" rx="11" fill="#d6d3d1"/>
+  <rect x="295" y="372" width="255" height="22" rx="11" fill="#d6d3d1"/>
+  <circle cx="365" cy="485" r="34" fill="#5f1717"/>
+  <circle cx="535" cy="485" r="34" fill="#5f1717"/>
+  <circle cx="376" cy="476" r="9" fill="#ffffff"/>
+  <circle cx="546" cy="476" r="9" fill="#ffffff"/>
+  <path d="M365 590 C410 540 490 540 535 590" fill="none" stroke="#5f1717" stroke-width="18" stroke-linecap="round"/>
+  <circle cx="635" cy="245" r="88" fill="#fef3c7" stroke="#f59e0b" stroke-width="10"/>
+  <text x="635" y="274" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="96" font-weight="900" fill="#7f1d1d">?</text>
+  <text x="450" y="770" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="42" font-weight="900" fill="#5f1717">REVISE. RETURN. REDEEM MENU.</text>
+</svg>

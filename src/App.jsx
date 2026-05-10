@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import Cart from "./components/Cart.jsx";
+import BpkihsGate, { hasValidBpkihsGatePass } from "./components/BpkihsGate.jsx";
 import Footer from "./components/Footer.jsx";
 import Header from "./components/Header.jsx";
 import ImagePreviewModal from "./components/ImagePreviewModal.jsx";
@@ -43,6 +44,10 @@ function openCartUrl() {
 }
 
 export default function App() {
+  const isBpkihsMode = import.meta.env.VITE_SITE_MODE === "bpkihs";
+  const [hasBpkihsGatePass, setHasBpkihsGatePass] = useState(
+    () => !isBpkihsMode || hasValidBpkihsGatePass()
+  );
   const [searchTerm, setSearchTerm] = useState("");
   const [activeCategory, setActiveCategory] = useState(getCategoryFromUrl);
   const [cart, setCart] = useState({});
@@ -110,6 +115,10 @@ export default function App() {
     if (window.location.hash === "#cart") {
       window.history.back();
     }
+  }
+
+  if (!hasBpkihsGatePass) {
+    return <BpkihsGate onUnlock={() => setHasBpkihsGatePass(true)} />;
   }
 
   return (
