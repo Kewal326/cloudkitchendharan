@@ -6,8 +6,16 @@
     <meta name="robots" content="index, follow" />
     <meta
       name="description"
-      content="Order fresh vegetarian and satvik meals in Dharan from Cloud Kitchen Dharan. No onion, no garlic options available. Pickup and home delivery from 8 AM to 9 PM."
+      content="Order fresh vegetarian food in Dharan, Nepal from Cloud Kitchen Dharan. Satvik meals, no onion no garlic options, burgers, momos, pizza, south Indian, Chinese, coffee, shakes and more. Home delivery and pickup, 8 AM to 9 PM."
     />
+    <meta
+      name="keywords"
+      content="food delivery Dharan, vegetarian restaurant Dharan, cloud kitchen Dharan, satvik food Dharan, vrat food Dharan, no onion no garlic Dharan, momo Dharan, pizza Dharan, burger Dharan, south Indian food Dharan, coffee Dharan, food order Dharan Nepal, Dharan restaurant, home delivery Dharan, online food Dharan, khana Dharan, खाना ढोरान, ढोरान खाना"
+    />
+    <meta name="geo.region" content="NP-P1" />
+    <meta name="geo.placename" content="Dharan, Koshi Province, Nepal" />
+    <meta name="geo.position" content="26.8121;87.2836" />
+    <meta name="ICBM" content="26.8121, 87.2836" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
     <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
@@ -52,11 +60,11 @@
         "@type": "Restaurant",
         "@id": "https://cloudkitchendharan.pages.dev/#restaurant",
         "name": "Cloud Kitchen Dharan",
-        "alternateName": "Cloud Kitchen",
+        "alternateName": ["Cloud Kitchen", "Cloud Kitchen Dharan Vegetarian"],
         "url": "https://cloudkitchendharan.pages.dev/",
         "image": "https://cloudkitchendharan.pages.dev/images/brand/social-preview.png",
         "logo": "https://cloudkitchendharan.pages.dev/images/brand/cloud-kitchen-logo.png",
-        "description": "Cloud Kitchen Dharan offers vegetarian food delivery in Dharan, including fresh satvik meals, no onion, no garlic options, pickup, and home delivery from 8 AM to 9 PM.",
+        "description": "Cloud Kitchen Dharan is a pure vegetarian cloud kitchen in Dharan, Nepal. We offer fresh satvik meals, no onion no garlic options, momos, burgers, pizza, south Indian, Chinese, lassi, coffee, shakes and refreshers. Home delivery across Dharan and pickup available from 8 AM to 9 PM.",
         "telephone": "+9779812356907",
         "priceRange": "Rs.50-Rs.650",
         "servesCuisine": [
@@ -67,20 +75,37 @@
           "Chinese",
           "Pizza",
           "Waffles",
+          "Street Food",
+          "Satvik",
           "Tea",
           "Coffee",
-          "Shakes"
+          "Shakes",
+          "Lassi",
+          "Momos",
+          "Refreshers"
         ],
         "address": {
           "@type": "PostalAddress",
           "addressLocality": "Dharan",
           "addressRegion": "Koshi Province",
+          "postalCode": "56700",
           "addressCountry": "NP"
         },
-        "areaServed": {
-          "@type": "City",
-          "name": "Dharan"
+        "geo": {
+          "@type": "GeoCoordinates",
+          "latitude": 26.8121,
+          "longitude": 87.2836
         },
+        "areaServed": [
+          {
+            "@type": "City",
+            "name": "Dharan"
+          },
+          {
+            "@type": "AdministrativeArea",
+            "name": "Koshi Province"
+          }
+        ],
         "openingHoursSpecification": [
           {
             "@type": "OpeningHoursSpecification",
@@ -99,6 +124,18 @@
         ],
         "hasMenu": "https://cloudkitchendharan.pages.dev/",
         "acceptsReservations": false,
+        "potentialAction": {
+          "@type": "OrderAction",
+          "target": {
+            "@type": "EntryPoint",
+            "urlTemplate": "https://cloudkitchendharan.pages.dev/",
+            "actionPlatform": [
+              "http://schema.org/DesktopWebPlatform",
+              "http://schema.org/MobileWebPlatform"
+            ]
+          },
+          "deliveryMethod": ["http://purl.org/goodrelations/v1#DeliveryModeDirectDownload"]
+        },
         "makesOffer": [
           {
             "@type": "Offer",
@@ -114,7 +151,8 @@
               "name": "Pickup available"
             }
           }
-        ]
+        ],
+        "keywords": "vegetarian food Dharan, satvik food Dharan, food delivery Dharan, cloud kitchen Dharan Nepal, vrat food Dharan, no onion no garlic Dharan"
       }
     </script>
   </head>
