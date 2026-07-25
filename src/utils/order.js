@@ -36,11 +36,15 @@ export function changeQuantity(cart, item, delta) {
   return next;
 }
 
-export function formatWhatsAppOrder({ cart, notes, total }) {
-  const lines = Object.values(cart).map(
-    (item) =>
-      `- ${item.name} x ${item.quantity} = ${price(item.price * item.quantity)}`
-  );
+export function formatWhatsAppOrder({ cart, notes, total, offer }) {
+  const lines = Object.values(cart)
+    .filter((item) => !item.isFree)
+    .map((item) => `- ${item.name} x ${item.quantity} = ${price(item.price * item.quantity)}`);
+
+  const offerUnlocked = offer && total >= offer.threshold;
+  if (offerUnlocked) {
+    lines.push(`🎁 FREE ${offer.freeItem} (offer applied)`);
+  }
 
   return [
     "Namaste Cloud Kitchen, I would like to place an order.",
@@ -51,6 +55,9 @@ export function formatWhatsAppOrder({ cart, notes, total }) {
     ...lines,
     "",
     `Total: ${price(total)}`,
+    ...(offerUnlocked
+      ? [`🎉 Free ${offer.freeItem} included — order above Rs.${offer.threshold}`]
+      : []),
     "",
     "Delivery charges may apply based on delivery location.",
     "",

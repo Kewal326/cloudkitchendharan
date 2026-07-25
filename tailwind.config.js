@@ -4,12 +4,14 @@ export default {
   theme: {
     extend: {
       colors: {
-        cream: "#FFF8F1",
+        cream: "#FFFFFF",
         maroon: {
           DEFAULT: "#7F1D1D",
           dark: "#5F1717"
         },
-        gold: "#F59E0B"
+        gold: "#F59E0B",
+        action: "#F59E0B",
+        brand: "#E23744"
       },
       boxShadow: {
         soft: "0 16px 40px rgba(95, 23, 23, 0.12)"

@@ -156,7 +156,7 @@ export default function MenuItemRow({ item, quantity, onAdd, onRemove, onImageCl
           <button
             type="button"
             onClick={onAdd}
-            className="h-9 rounded-full bg-maroon px-4 text-sm font-black text-white shadow-sm transition hover:bg-maroon-dark"
+            className="h-9 rounded-full bg-action px-4 text-sm font-black text-maroon-dark shadow-sm transition hover:opacity-90"
           >
             Add
           </button>

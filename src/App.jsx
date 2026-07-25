@@ -1,14 +1,18 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Cart from "./components/Cart.jsx";
+import BannerCarousel from "./components/BannerCarousel.jsx";
 import BpkihsGate, { hasValidBpkihsGatePass } from "./components/BpkihsGate.jsx";
+import Confetti from "./components/Confetti.jsx";
 import Footer from "./components/Footer.jsx";
 import Header from "./components/Header.jsx";
 import ImagePreviewModal from "./components/ImagePreviewModal.jsx";
 import MenuSection from "./components/MenuSection.jsx";
+import SearchBar from "./components/SearchBar.jsx";
 import StickySearchCategories from "./components/StickySearchCategories.jsx";
+import { FREE_ITEM_ID, activeOffer } from "./data/offers.js";
 import { categoryNames, menuCategories } from "./data/menu.js";
 import { filterCategories } from "./utils/filter.js";
-import { changeQuantity, getCartCount } from "./utils/order.js";
+import { changeQuantity, getCartCount, price } from "./utils/order.js";
 
 function getCategoryFromUrl() {
   const params = new URLSearchParams(window.location.search);
@@ -49,17 +53,55 @@ export default function App() {
     () => !isBpkihsMode || hasValidBpkihsGatePass()
   );
   const [searchTerm, setSearchTerm] = useState("");
+  const [searchFocused, setSearchFocused] = useState(false);
   const [activeCategory, setActiveCategory] = useState(getCategoryFromUrl);
-  const [cart, setCart] = useState({});
+  const [cart, setCart] = useState(() => {
+    try {
+      const saved = localStorage.getItem("ck_cart");
+      return saved ? JSON.parse(saved) : {};
+    } catch {
+      return {};
+    }
+  });
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [cartShaking, setCartShaking] = useState(false);
   const [previewItem, setPreviewItem] = useState(null);
+  const [showConfetti, setShowConfetti] = useState(false);
+  const [showOfferModal, setShowOfferModal] = useState(false);
+  const confettiTimer = useRef(null);
 
   const filteredCategories = useMemo(
     () => filterCategories(menuCategories, { searchTerm, activeCategory }),
     [searchTerm, activeCategory]
   );
   const cartCount = getCartCount(cart);
+
+  const regularTotal = useMemo(
+    () => Object.values(cart).reduce((sum, item) => item.id === FREE_ITEM_ID ? sum : sum + item.price * item.quantity, 0),
+    [cart]
+  );
+  const offerUnlocked = !!(activeOffer && regularTotal >= activeOffer.threshold);
+  const hasFreeItem = FREE_ITEM_ID in cart;
+
+  useEffect(() => {
+    if (!activeOffer) return;
+    if (offerUnlocked && !hasFreeItem) {
+      setCart(c => ({
+        ...c,
+        [FREE_ITEM_ID]: { id: FREE_ITEM_ID, name: activeOffer.freeItem, price: 0, quantity: 1, isFree: true }
+      }));
+      clearTimeout(confettiTimer.current);
+      setShowConfetti(true);
+      setShowOfferModal(true);
+      confettiTimer.current = setTimeout(() => setShowConfetti(false), 3200);
+    } else if (!offerUnlocked && hasFreeItem) {
+      setCart(c => { const next = { ...c }; delete next[FREE_ITEM_ID]; return next; });
+    }
+  }, [offerUnlocked, hasFreeItem]);
+
+  useEffect(() => {
+    try { localStorage.setItem("ck_cart", JSON.stringify(cart)); } catch {}
+  }, [cart]);
 
   useEffect(() => {
     function handlePopState() {
@@ -123,14 +165,26 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-cream text-maroon-dark">
-      <Header />
+      <div className="sticky -top-[52px] z-30 bg-brand">
+        <Header />
+        <SearchBar
+          searchTerm={searchTerm}
+          onSearchChange={handleSearchChange}
+          onFocus={() => setSearchFocused(true)}
+          onBlur={() => setSearchFocused(false)}
+        />
+      </div>
+      <div
+        className="overflow-hidden bg-brand transition-[max-height] duration-300 ease-in-out"
+        style={{ maxHeight: searchFocused || searchTerm ? 0 : 300 }}
+      >
+        <BannerCarousel />
+      </div>
 
       <StickySearchCategories
         categories={categoryNames}
         activeCategory={activeCategory}
-        searchTerm={searchTerm}
         onCategoryChange={handleCategoryChange}
-        onSearchChange={handleSearchChange}
       />
 
       <main className="mx-auto grid max-w-7xl gap-4 px-3 pb-24 pt-3 sm:px-5 lg:grid-cols-[minmax(0,1fr)_22rem] lg:pb-8">
@@ -163,18 +217,45 @@ export default function App() {
 
       <Footer />
 
-      <button
-        type="button"
-        onClick={openCart}
-        className={`fixed bottom-4 left-3 right-3 z-40 flex h-12 items-center justify-center rounded-full bg-maroon text-sm font-black text-white shadow-soft lg:hidden ${
-          cartShaking ? "animate-cart-shake" : ""
-        }`}
-      >
-        {cartCount > 0 ? "Review order" : "View cart"}
-        <span className="ml-2 rounded-full bg-gold px-2 py-0.5 text-xs text-maroon-dark">
-          {cartCount}
-        </span>
-      </button>
+      <div className="fixed bottom-4 left-3 right-3 z-50 flex flex-col gap-2 lg:hidden">
+        {activeOffer && (
+          <div className={`flex items-center gap-3 rounded-full px-4 py-2.5 shadow-soft transition-colors duration-500 ${offerUnlocked ? "bg-green-800" : "bg-maroon-dark"}`}>
+            <div className="min-w-0 flex-1">
+              {offerUnlocked ? (
+                <div className="flex items-center justify-between text-xs">
+                  <span className="text-white/80">Your free treat is in the cart</span>
+                  <span className="ml-2 shrink-0 font-black text-green-300">🎁 {activeOffer.freeItem} — FREE</span>
+                </div>
+              ) : (
+                <>
+                  <div className="mb-1 flex items-center justify-between text-xs">
+                    <span className="text-white/80">Add {price(activeOffer.threshold - regularTotal)} more for</span>
+                    <span className="ml-2 shrink-0 font-black text-gold">FREE {activeOffer.freeItem}!</span>
+                  </div>
+                  <div className="h-1 w-full overflow-hidden rounded-full bg-white/20">
+                    <div
+                      className="h-full rounded-full bg-gold transition-all duration-500"
+                      style={{ width: `${Math.min(100, (regularTotal / activeOffer.threshold) * 100)}%` }}
+                    />
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+        )}
+        <button
+          type="button"
+          onClick={openCart}
+          className={`flex h-12 w-full items-center justify-center rounded-full bg-action text-sm font-black text-maroon-dark shadow-soft ${
+            cartShaking ? "animate-cart-shake" : ""
+          }`}
+        >
+          {cartCount > 0 ? "Review order" : "View cart"}
+          <span className="ml-2 rounded-full bg-gold px-2 py-0.5 text-xs text-maroon-dark">
+            {cartCount}
+          </span>
+        </button>
+      </div>
 
       <Cart
         cart={cart}
@@ -184,6 +265,28 @@ export default function App() {
         onClose={closeCart}
       />
       <ImagePreviewModal item={previewItem} onClose={() => setPreviewItem(null)} />
+      <Confetti active={showConfetti} />
+      {showOfferModal && (
+        <div className="fixed inset-0 z-[102] flex items-center justify-center bg-maroon-dark/60 px-6">
+          <div className="w-full max-w-xs rounded-2xl bg-white px-6 pb-6 pt-8 text-center shadow-2xl">
+            <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-green-100">
+              <span className="text-4xl">🎁</span>
+            </div>
+            <p className="text-sm font-semibold uppercase tracking-widest text-stone-400">Offer unlocked</p>
+            <p className="mt-2 text-2xl font-black text-maroon-dark">Free {activeOffer.freeItem}!</p>
+            <p className="mt-1 text-sm text-stone-500">
+              Worth {price(activeOffer.freeItemPrice)} — added to your cart on us.
+            </p>
+            <button
+              type="button"
+              onClick={() => setShowOfferModal(false)}
+              className="mt-6 w-full rounded-full bg-action py-3 text-base font-black text-maroon-dark"
+            >
+              Woohoo! Thanks 🎉
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -1,4 +1,5 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { activeOffer } from "../data/offers.js";
 import {
   PRIMARY_PHONE,
   formatWhatsAppChat,
@@ -13,7 +14,7 @@ function CartContent({ cart, onAdd, onRemove, onClose }) {
   const items = Object.values(cart);
   const total = getCartTotal(cart);
   const orderText = useMemo(
-    () => formatWhatsAppOrder({ cart, notes, total }),
+    () => formatWhatsAppOrder({ cart, notes, total, offer: activeOffer }),
     [cart, notes, total]
   );
   const whatsAppText = items.length ? orderText : formatWhatsAppChat();
@@ -48,7 +49,21 @@ function CartContent({ cart, onAdd, onRemove, onClose }) {
           </p>
         ) : (
           <div className="space-y-3">
-            {items.map((item) => (
+            {items.map((item) => item.isFree ? (
+              <div key={item.id} className="grid grid-cols-[1fr_auto] items-center gap-3">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <p className="text-sm font-extrabold text-maroon-dark">{item.name}</p>
+                    <span className="rounded-full bg-green-100 px-2 py-0.5 text-[10px] font-black uppercase tracking-wide text-green-700">FREE</span>
+                  </div>
+                  <p className="text-xs text-stone-400">
+                    <span className="line-through">{price(activeOffer?.freeItemPrice ?? 0)}</span>
+                    <span className="ml-1 font-bold text-green-600">Rs.0</span>
+                  </p>
+                </div>
+                <span className="text-lg" aria-label="Gift">🎁</span>
+              </div>
+            ) : (
               <div key={item.id} className="grid grid-cols-[1fr_auto] gap-3">
                 <div>
                   <p className="text-sm font-extrabold text-maroon-dark">{item.name}</p>
@@ -105,7 +120,7 @@ function CartContent({ cart, onAdd, onRemove, onClose }) {
           href={getWhatsAppUrl(whatsAppText)}
           target="_blank"
           rel="noreferrer"
-          className="flex h-11 items-center justify-center rounded-full bg-maroon text-sm font-black text-white hover:bg-maroon-dark"
+          className="flex h-11 items-center justify-center rounded-full bg-action text-sm font-black text-maroon-dark hover:opacity-90"
         >
           Order on WhatsApp
         </a>
@@ -130,6 +145,19 @@ export default function Cart({
   onClose,
   desktop = false
 }) {
+  // Keeps the drawer in the DOM only while it's visible or animating.
+  // Prevents mobile Chrome from GPU-compositing the off-screen drawer
+  // over the fixed "View cart" button during fast scroll.
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    if (isOpen) {
+      setMounted(true);
+    } else {
+      const t = setTimeout(() => setMounted(false), 310);
+      return () => clearTimeout(t);
+    }
+  }, [isOpen]);
+
   if (desktop) {
     return (
       <aside className="sticky top-4 hidden max-h-[calc(100vh-2rem)] overflow-hidden rounded-lg border border-maroon/10 bg-white shadow-soft lg:block">
@@ -137,6 +165,8 @@ export default function Cart({
       </aside>
     );
   }
+
+  if (!mounted) return null;
 
   return (
     <div
