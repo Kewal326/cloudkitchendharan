@@ -12,8 +12,8 @@ export const banners = [
   {
     variant: "bold",
     bg: "#E23744",
-    label: "100% Vegetarian",
-    headline: "No Onion.\nNo Garlic.",
-    subtext: "Satvik & vrat meals available on request",
+    label: "Available on request",
+    headline: "Satvik &\nVrat Meals",
+    subtext: "No onion · No garlic · Prepared fresh for you",
   },
 ];
