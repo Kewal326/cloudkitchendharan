@@ -5,8 +5,10 @@ import BpkihsGate, { hasValidBpkihsGatePass } from "./components/BpkihsGate.jsx"
 import Confetti from "./components/Confetti.jsx";
 import Footer from "./components/Footer.jsx";
 import Header from "./components/Header.jsx";
-import ImagePreviewModal from "./components/ImagePreviewModal.jsx";
+import ItemBottomSheet from "./components/ItemBottomSheet.jsx";
+import CategoryPage from "./components/CategoryPage.jsx";
 import MenuSection from "./components/MenuSection.jsx";
+import MenuShelf, { shelfId } from "./components/MenuShelf.jsx";
 import SearchBar from "./components/SearchBar.jsx";
 import StickySearchCategories from "./components/StickySearchCategories.jsx";
 import { FREE_ITEM_ID, activeOffer } from "./data/offers.js";
@@ -74,7 +76,28 @@ export default function App() {
     () => filterCategories(menuCategories, { searchTerm, activeCategory }),
     [searchTerm, activeCategory]
   );
+  const isShelfView = !searchTerm.trim() && activeCategory === "All";
+  const shelfCategories = isShelfView ? (() => {
+    const VRAT = "Satvik / Vrat Menu";
+    const vrat = filteredCategories.find((c) => c.name === VRAT);
+    if (!vrat) return filteredCategories;
+    const rest = filteredCategories.filter((c) => c.name !== VRAT);
+    return [...rest.slice(0, 2), vrat, ...rest.slice(2)];
+  })() : filteredCategories;
   const cartCount = getCartCount(cart);
+
+  function handleScrollToShelf(categoryName) {
+    if (categoryName === "All") {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
+    const el = document.getElementById(shelfId(categoryName));
+    if (!el) return;
+    const stickyEls = document.querySelectorAll("[data-sticky]");
+    const stickyHeight = Array.from(stickyEls).reduce((h, s) => h + s.getBoundingClientRect().height, 0);
+    const top = el.getBoundingClientRect().top + window.scrollY - stickyHeight - 8;
+    window.scrollTo({ top, behavior: "smooth" });
+  }
 
   const regularTotal = useMemo(
     () => Object.values(cart).reduce((sum, item) => item.id === FREE_ITEM_ID ? sum : sum + item.price * item.quantity, 0),
@@ -106,6 +129,7 @@ export default function App() {
   useEffect(() => {
     function handlePopState() {
       setIsCartOpen(window.location.hash === "#cart");
+      setPreviewItem(null);
       setSearchTerm("");
       setActiveCategory(getCategoryFromUrl());
     }
@@ -159,63 +183,88 @@ export default function App() {
     }
   }
 
+  function openItemDetail(item) {
+    setPreviewItem(item);
+    window.history.pushState({ itemDetail: true }, "", `${window.location.pathname}${window.location.search}#item-detail`);
+  }
+
+  function closeItemDetail() {
+    setPreviewItem(null);
+    if (window.location.hash === "#item-detail") {
+      window.history.back();
+    }
+  }
+
   if (!hasBpkihsGatePass) {
     return <BpkihsGate onUnlock={() => setHasBpkihsGatePass(true)} />;
   }
 
   return (
     <div className="min-h-screen bg-cream text-maroon-dark">
-      <div className="sticky -top-[52px] z-30 bg-brand">
-        <Header />
-        <SearchBar
+      {isShelfView ? (
+        <>
+          <div data-sticky className="sticky -top-[52px] z-30 bg-brand">
+            <Header />
+            <SearchBar
+              searchTerm={searchTerm}
+              onSearchChange={handleSearchChange}
+              onFocus={() => setSearchFocused(true)}
+              onBlur={() => setSearchFocused(false)}
+            />
+          </div>
+          <div
+            className="overflow-hidden bg-brand transition-[max-height] duration-300 ease-in-out"
+            style={{ maxHeight: searchFocused || searchTerm ? 0 : 300 }}
+          >
+            <BannerCarousel />
+          </div>
+          <StickySearchCategories
+            categories={categoryNames.filter((c) => c !== "All")}
+            activeCategory={activeCategory}
+            onCategoryChange={handleScrollToShelf}
+          />
+          <main className="mx-auto grid max-w-7xl gap-4 px-3 pb-24 pt-0 sm:px-5 lg:grid-cols-[minmax(0,1fr)_22rem] lg:pb-8">
+            <div className="min-w-0">
+              {shelfCategories.length ? (
+                <div className="divide-y divide-maroon/5">
+                  {shelfCategories.map((category) => (
+                    <MenuShelf
+                      key={category.name}
+                      category={category}
+                      cart={cart}
+                      onAdd={addItem}
+                      onRemove={removeItem}
+                      onImageClick={openItemDetail}
+                      onSeeAll={handleCategoryChange}
+                    />
+                  ))}
+                </div>
+              ) : (
+                <div className="rounded-lg border border-maroon/10 bg-white p-6 text-center">
+                  <p className="font-black text-maroon-dark">No items found</p>
+                  <p className="mt-1 text-sm text-stone-700">Try a different search or choose All categories.</p>
+                </div>
+              )}
+            </div>
+            <Cart cart={cart} onAdd={addItem} onRemove={removeItem} desktop />
+          </main>
+          <Footer />
+        </>
+      ) : (
+        <CategoryPage
+          filteredCategories={filteredCategories}
+          allCategoryNames={categoryNames}
+          activeCategory={activeCategory}
           searchTerm={searchTerm}
           onSearchChange={handleSearchChange}
-          onFocus={() => setSearchFocused(true)}
-          onBlur={() => setSearchFocused(false)}
+          onCategoryChange={handleCategoryChange}
+          onBack={() => handleCategoryChange("All")}
+          cart={cart}
+          onAdd={addItem}
+          onRemove={removeItem}
+          onImageClick={openItemDetail}
         />
-      </div>
-      <div
-        className="overflow-hidden bg-brand transition-[max-height] duration-300 ease-in-out"
-        style={{ maxHeight: searchFocused || searchTerm ? 0 : 300 }}
-      >
-        <BannerCarousel />
-      </div>
-
-      <StickySearchCategories
-        categories={categoryNames}
-        activeCategory={activeCategory}
-        onCategoryChange={handleCategoryChange}
-      />
-
-      <main className="mx-auto grid max-w-7xl gap-4 px-3 pb-24 pt-3 sm:px-5 lg:grid-cols-[minmax(0,1fr)_22rem] lg:pb-8">
-        <div className="min-w-0">
-          {filteredCategories.length ? (
-            <div className="space-y-5">
-              {filteredCategories.map((category) => (
-                <MenuSection
-                  key={category.name}
-                  category={category}
-                  cart={cart}
-                  onAdd={addItem}
-                  onRemove={removeItem}
-                  onImageClick={setPreviewItem}
-                />
-              ))}
-            </div>
-          ) : (
-            <div className="rounded-lg border border-maroon/10 bg-white p-6 text-center">
-              <p className="font-black text-maroon-dark">No items found</p>
-              <p className="mt-1 text-sm text-stone-700">
-                Try a different search or choose All categories.
-              </p>
-            </div>
-          )}
-        </div>
-
-        <Cart cart={cart} onAdd={addItem} onRemove={removeItem} desktop />
-      </main>
-
-      <Footer />
+      )}
 
       <div className="fixed bottom-4 left-3 right-3 z-50 flex flex-col gap-2 lg:hidden">
         {activeOffer && (
@@ -264,7 +313,13 @@ export default function App() {
         isOpen={isCartOpen}
         onClose={closeCart}
       />
-      <ImagePreviewModal item={previewItem} onClose={() => setPreviewItem(null)} />
+      <ItemBottomSheet
+        item={previewItem}
+        cart={cart}
+        onAdd={() => { if (previewItem) addItem(previewItem); }}
+        onRemove={() => { if (previewItem) removeItem(previewItem); }}
+        onClose={closeItemDetail}
+      />
       <Confetti active={showConfetti} />
       {showOfferModal && (
         <div className="fixed inset-0 z-[102] flex items-center justify-center bg-maroon-dark/60 px-6">

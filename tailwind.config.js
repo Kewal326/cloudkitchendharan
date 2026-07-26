@@ -23,10 +23,20 @@ export default {
           "40%": { transform: "translateX(3px) rotate(3deg)" },
           "60%": { transform: "translateX(-2px) rotate(-2deg)" },
           "80%": { transform: "translateX(2px) rotate(2deg)" }
+        },
+        pageEnter: {
+          "0%": { opacity: "0", transform: "translateY(24px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" }
+        },
+        sheetEnter: {
+          "0%": { transform: "translateY(100%)" },
+          "100%": { transform: "translateY(0)" }
         }
       },
       animation: {
-        "cart-shake": "cartShake 420ms ease-in-out"
+        "cart-shake": "cartShake 420ms ease-in-out",
+        "page-enter": "pageEnter 380ms cubic-bezier(0.22,1,0.36,1) both",
+        "sheet-enter": "sheetEnter 320ms cubic-bezier(0.22,1,0.36,1) both"
       }
     }
   },
