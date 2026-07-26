@@ -76,8 +76,8 @@ export default function App() {
     () => filterCategories(menuCategories, { searchTerm, activeCategory }),
     [searchTerm, activeCategory]
   );
-  const isShelfView = !searchTerm.trim() && activeCategory === "All";
-  const shelfCategories = isShelfView ? (() => {
+  const isShelfView = activeCategory === "All";
+  const shelfCategories = (isShelfView && !searchTerm.trim()) ? (() => {
     const VRAT = "Satvik / Vrat Menu";
     const vrat = filteredCategories.find((c) => c.name === VRAT);
     if (!vrat) return filteredCategories;
@@ -155,12 +155,6 @@ export default function App() {
 
   function handleSearchChange(value) {
     setSearchTerm(value);
-    if (value.trim()) {
-      setActiveCategory("All");
-      if (activeCategory !== "All") {
-        updateCategoryUrl("All");
-      }
-    }
   }
 
   function handleCategoryChange(category) {
