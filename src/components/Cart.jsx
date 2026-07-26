@@ -9,8 +9,7 @@ import {
   price
 } from "../utils/order.js";
 
-function CartContent({ cart, onAdd, onRemove, onClose }) {
-  const [notes, setNotes] = useState("");
+function CartContent({ cart, onAdd, onRemove, onClose, notes, onNotesChange }) {
   const items = Object.values(cart);
   const total = getCartTotal(cart);
   const orderText = useMemo(
@@ -100,7 +99,7 @@ function CartContent({ cart, onAdd, onRemove, onClose }) {
         <div className="mt-5">
           <textarea
             value={notes}
-            onChange={(event) => setNotes(event.target.value)}
+            onChange={(event) => onNotesChange(event.target.value)}
             placeholder="Notes (optional)"
             rows="3"
             className="w-full resize-none rounded-md border border-maroon/15 bg-white px-3 py-2 text-sm outline-none focus:border-gold focus:ring-4 focus:ring-gold/20"
@@ -145,6 +144,12 @@ export default function Cart({
   onClose,
   desktop = false
 }) {
+  const [notes, setNotes] = useState(() => {
+    try { return localStorage.getItem("ck_cart_notes") ?? ""; } catch { return ""; }
+  });
+  useEffect(() => {
+    try { localStorage.setItem("ck_cart_notes", notes); } catch {}
+  }, [notes]);
   // Keeps the drawer in the DOM only while it's visible or animating.
   // Prevents mobile Chrome from GPU-compositing the off-screen drawer
   // over the fixed "View cart" button during fast scroll.
@@ -161,7 +166,7 @@ export default function Cart({
   if (desktop) {
     return (
       <aside className="sticky top-4 hidden max-h-[calc(100vh-2rem)] overflow-hidden rounded-lg border border-maroon/10 bg-white shadow-soft lg:block">
-        <CartContent cart={cart} onAdd={onAdd} onRemove={onRemove} />
+        <CartContent cart={cart} onAdd={onAdd} onRemove={onRemove} notes={notes} onNotesChange={setNotes} />
       </aside>
     );
   }
@@ -189,7 +194,7 @@ export default function Cart({
         }`}
       >
         <div className="mx-auto mt-2 h-1.5 w-12 rounded-full bg-maroon/20" />
-        <CartContent cart={cart} onAdd={onAdd} onRemove={onRemove} onClose={onClose} />
+        <CartContent cart={cart} onAdd={onAdd} onRemove={onRemove} onClose={onClose} notes={notes} onNotesChange={setNotes} />
       </div>
     </div>
   );

@@ -1,8 +1,10 @@
+import { useId } from "react";
 import { price } from "../utils/order.js";
 import { menuImageAlt } from "../utils/seo.js";
 
 function RatingStar({ fill }) {
-  const clipId = `rating-star-${fill}`;
+  const uid = useId();
+  const clipId = `rating-star-${uid}`;
 
   return (
     <svg className="h-[0.68rem] w-[0.68rem]" viewBox="0 0 24 24" aria-hidden="true">
