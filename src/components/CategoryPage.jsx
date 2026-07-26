@@ -71,15 +71,15 @@ export default function CategoryPage({
 
         {/* Category chips */}
         <div className="no-scrollbar flex gap-2 overflow-x-auto border-t border-maroon/10 px-3 py-2.5 sm:px-5">
-          {allCategoryNames.map((cat) => {
+          {allCategoryNames.filter((cat) => cat !== "All").map((cat) => {
             const isActive = cat === activeCategory;
-            const label = cat === "All" ? "All" : (categoryShortNames[cat] ?? cat);
+            const label = categoryShortNames[cat] ?? cat;
             return (
               <button
                 key={cat}
                 ref={(el) => { chipRefs.current[cat] = el; }}
                 type="button"
-                onClick={() => cat === "All" ? onBack() : onCategoryChange(cat)}
+                onClick={() => onCategoryChange(cat)}
                 className={`flex-shrink-0 rounded-full px-3 py-1 text-xs font-bold transition-colors ${
                   isActive
                     ? "bg-maroon text-white"
@@ -94,7 +94,7 @@ export default function CategoryPage({
       </div>
 
       {/* Items */}
-      <div className="px-3 pb-32 pt-3 sm:px-5">
+      <div className="pb-32">
         {filteredCategories.length ? (
           <div className="space-y-5">
             {filteredCategories.map((category) => (
