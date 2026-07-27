@@ -386,3 +386,8 @@ export const menuCategories = categories.map((category) => ({
 export const categoryNames = ["All", ...menuCategories.map((category) => category.name)];
 
 export const allMenuItems = menuCategories.flatMap((category) => category.items);
+
+// Maps item id → category name, used for cart recommendations
+export const itemCategoryMap = Object.fromEntries(
+  menuCategories.flatMap((cat) => cat.items.map((item) => [item.id, cat.name]))
+);

@@ -8,9 +8,14 @@ import {
   getWhatsAppUrl,
   price
 } from "../utils/order.js";
+import CartRecommendations from "./CartRecommendations.jsx";
 
-function CartItems({ cart, onAdd, onRemove, notes, onNotesChange }) {
+function CartItems({ cart, onAdd, onRemove, notes, onNotesChange, onAddRecommended }) {
   const items = Object.values(cart);
+  const regularTotal = items.reduce(
+    (sum, item) => (item.isFree ? sum : sum + item.price * item.quantity), 0
+  );
+  const offerUnlocked = !!(activeOffer && regularTotal >= activeOffer.threshold);
 
   return (
     <>
@@ -69,6 +74,29 @@ function CartItems({ cart, onAdd, onRemove, notes, onNotesChange }) {
           )}
         </div>
       )}
+
+      {activeOffer && (
+        <div className={`mt-5 rounded-xl px-4 py-3 transition-colors duration-500 ${offerUnlocked ? "bg-green-800" : "bg-maroon-dark"}`}>
+          {offerUnlocked ? (
+            <p className="text-xs font-black text-green-300">🎁 {activeOffer.freeItem} — added to your order for FREE!</p>
+          ) : (
+            <>
+              <div className="mb-1.5 flex items-center justify-between text-xs">
+                <span className="text-white/80">Add {price(activeOffer.threshold - regularTotal)} more for</span>
+                <span className="font-black text-gold">FREE {activeOffer.freeItem}!</span>
+              </div>
+              <div className="h-1 w-full overflow-hidden rounded-full bg-white/20">
+                <div
+                  className="h-full rounded-full bg-gold transition-all duration-500"
+                  style={{ width: `${Math.min(100, (regularTotal / activeOffer.threshold) * 100)}%` }}
+                />
+              </div>
+            </>
+          )}
+        </div>
+      )}
+
+      <CartRecommendations cart={cart} onAdd={onAddRecommended} />
 
       <div className="mt-5">
         <textarea
@@ -163,6 +191,7 @@ export default function Cart({ cart, onAdd, onRemove, isOpen, onClose, desktop =
             onRemove={onRemove}
             notes={notes}
             onNotesChange={setNotes}
+            onAddRecommended={onAdd}
           />
         </div>
         <div className="flex-shrink-0 border-t border-maroon/10 p-4">
@@ -205,6 +234,7 @@ export default function Cart({ cart, onAdd, onRemove, isOpen, onClose, desktop =
           onRemove={onRemove}
           notes={notes}
           onNotesChange={setNotes}
+          onAddRecommended={onAdd}
         />
       </div>
 
