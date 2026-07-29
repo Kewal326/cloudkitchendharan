@@ -22,7 +22,7 @@ function SplitCard({ banner }) {
     >
       <div className="min-w-0 flex-1">
         {banner.label && (
-          <p className="mb-1 text-[11px] font-bold uppercase tracking-widest text-white/60">
+          <p className="mb-2 inline-block rounded-full bg-gold px-2.5 py-0.5 text-[10px] font-black uppercase tracking-widest text-maroon-dark">
             {banner.label}
           </p>
         )}
@@ -83,7 +83,7 @@ function BoldCard({ banner }) {
       style={{ backgroundColor: banner.bg || "#4338CA" }}
     >
       {banner.label && (
-        <p className="mb-2 text-[11px] font-bold uppercase tracking-widest text-white/60">
+        <p className="mb-2 inline-block rounded-full bg-gold px-2.5 py-0.5 text-[10px] font-black uppercase tracking-widest text-maroon-dark">
           {banner.label}
         </p>
       )}

@@ -6,6 +6,7 @@ import Confetti from "./components/Confetti.jsx";
 import Footer from "./components/Footer.jsx";
 import Header from "./components/Header.jsx";
 import ItemBottomSheet from "./components/ItemBottomSheet.jsx";
+import VariantPickerSheet from "./components/VariantPickerSheet.jsx";
 import CategoryPage from "./components/CategoryPage.jsx";
 import MenuSection from "./components/MenuSection.jsx";
 import MenuShelf, { shelfId } from "./components/MenuShelf.jsx";
@@ -68,6 +69,7 @@ export default function App() {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [cartShaking, setCartShaking] = useState(false);
   const [previewItem, setPreviewItem] = useState(null);
+  const [variantItem, setVariantItem] = useState(null);
   const [showConfetti, setShowConfetti] = useState(false);
   const [showOfferModal, setShowOfferModal] = useState(false);
   const confettiTimer = useRef(null);
@@ -145,6 +147,11 @@ export default function App() {
   }
 
   function addItem(item) {
+    if (item.variants?.length) {
+      setPreviewItem(null);
+      setVariantItem(item);
+      return;
+    }
     setCart((current) => changeQuantity(current, item, 1));
     triggerCartShake();
   }
@@ -306,6 +313,15 @@ export default function App() {
         onRemove={removeItem}
         isOpen={isCartOpen}
         onClose={closeCart}
+      />
+      <VariantPickerSheet
+        item={variantItem}
+        onSelect={(v) => {
+          setCart((current) => changeQuantity(current, v, 1));
+          triggerCartShake();
+          setVariantItem(null);
+        }}
+        onClose={() => setVariantItem(null)}
       />
       <ItemBottomSheet
         item={previewItem}
