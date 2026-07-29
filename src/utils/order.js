@@ -4,6 +4,15 @@ export const WHATSAPP_PHONE = "9779812356907";
 
 export const price = (value) => `Rs.${value}`;
 
+export function getItemQuantity(cart, item) {
+  if (item.variants?.length) {
+    return Object.values(cart)
+      .filter((ci) => ci.id.startsWith(item.id + "-"))
+      .reduce((s, ci) => s + ci.quantity, 0);
+  }
+  return cart[item.id]?.quantity ?? 0;
+}
+
 export function getCartCount(cart) {
   return Object.values(cart).reduce((sum, item) => sum + item.quantity, 0);
 }

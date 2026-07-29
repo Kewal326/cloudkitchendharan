@@ -1,4 +1,4 @@
-import { price } from "../utils/order.js";
+import { getItemQuantity, price } from "../utils/order.js";
 import { menuImageAlt } from "../utils/seo.js";
 
 const PREVIEW_COUNT = 4;
@@ -92,7 +92,7 @@ function VratFeatureShelf({ category, cart, onAdd, onRemove, onImageClick, onSee
           <ItemCard
             key={item.id}
             item={item}
-            quantity={cart[item.id]?.quantity ?? 0}
+            quantity={getItemQuantity(cart, item)}
             onAdd={() => onAdd(item)}
             onRemove={() => onRemove(item)}
             onImageClick={onImageClick}
@@ -156,7 +156,7 @@ export default function MenuShelf({ category, cart, onAdd, onRemove, onImageClic
           <ItemCard
             key={item.id}
             item={item}
-            quantity={cart[item.id]?.quantity ?? 0}
+            quantity={getItemQuantity(cart, item)}
             onAdd={() => onAdd(item)}
             onRemove={() => onRemove(item)}
             onImageClick={onImageClick}

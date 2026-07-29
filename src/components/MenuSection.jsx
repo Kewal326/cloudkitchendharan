@@ -1,4 +1,5 @@
 import MenuItemRow from "./MenuItemRow.jsx";
+import { getItemQuantity } from "../utils/order.js";
 
 export default function MenuSection({ category, cart, onAdd, onRemove, onImageClick }) {
   return (
@@ -8,7 +9,7 @@ export default function MenuSection({ category, cart, onAdd, onRemove, onImageCl
           <MenuItemRow
             key={`${category.name}-${item.id}`}
             item={item}
-            quantity={cart[item.id]?.quantity ?? 0}
+            quantity={getItemQuantity(cart, item)}
             onAdd={() => onAdd(item)}
             onRemove={() => onRemove(item)}
             onImageClick={onImageClick}
