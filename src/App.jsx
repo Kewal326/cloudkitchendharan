@@ -157,6 +157,16 @@ export default function App() {
   }
 
   function removeItem(item) {
+    if (item.variants?.length) {
+      setCart((current) => {
+        const variantEntry = Object.values(current).find(
+          (ci) => ci.id.startsWith(item.id + "-") && ci.quantity > 0
+        );
+        if (!variantEntry) return current;
+        return changeQuantity(current, variantEntry, -1);
+      });
+      return;
+    }
     setCart((current) => changeQuantity(current, item, -1));
   }
 
