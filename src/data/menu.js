@@ -2,7 +2,7 @@ const categories = [
   {
     name: "Popular",
     items: [
-      ["Mirchi Achar", 500, "Tangy spicy mirchi pickle, homemade and full of flavour.", ["pickle", "achar", "condiment"], [{ label: "500 Gram", price: 500 }, { label: "1 Kg", price: 1000 }]],
+      ["Khorsani Achar", 500, "Tangy spicy khorsani pickle, homemade and full of flavour.", ["pickle", "achar", "condiment"], [{ label: "500 Gram", price: 500 }, { label: "1 Kg", price: 1000 }]],
       ["Jhol Momo", 250, "Vegetarian momos served in warm spicy jhol sauce.", ["momo", "jhol", "snack"]],
       ["Mix Veg Pizza", 600, "Cheesy pizza topped with capsicum, corn, onion, and vegetables.", ["pizza", "cheese", "popular", "best seller"]],
       ["French Fries (Peri Peri / Salty)", 150, "Crisp fries tossed salty or peri peri, served hot.", ["fries", "potato", "snack"]],

@@ -3,10 +3,10 @@ export const banners = [
     variant: "split",
     bg: "#E23744",
     label: "New Arrival",
-    headline: "Mirchi Achar",
+    headline: "Khorsani Achar",
     subtext: "Homemade · Tangy · Spicy",
-    imageSrc: "/images/menu/mirchi-achar.jpg",
-    imageAlt: "Mirchi Achar",
+    imageSrc: "/images/menu/khorsani-achar.jpg",
+    imageAlt: "Khorsani Achar",
   },
   {
     variant: "split",
