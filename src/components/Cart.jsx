@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { getCurrentTierMin, getDiscount, getNextTier } from "../data/offers.js";
+import { discountTiers, getDiscount, getNextTier } from "../data/offers.js";
 import {
   PRIMARY_PHONE,
   formatWhatsAppChat,
@@ -58,35 +58,44 @@ function CartItems({ cart, onAdd, onRemove, notes, onNotesChange, onAddRecommend
       )}
 
       {(discount > 0 || nextTier) && (
-        <div className={`mt-5 rounded-xl px-4 py-3 transition-colors duration-500 ${!nextTier ? "bg-green-800" : "bg-maroon-dark"}`}>
-          {!nextTier ? (
-            <p className="text-xs font-black text-green-300">Rs.{discount} off applied on your order!</p>
-          ) : discount > 0 ? (
-            <>
-              <div className="mb-1.5 flex items-center justify-between text-xs">
-                <span className="text-white/80">Rs.{discount} off applied · Add {price(nextTier.min - subtotal)} for Rs.{nextTier.discount} off!</span>
-              </div>
-              <div className="h-1 w-full overflow-hidden rounded-full bg-white/20">
-                <div
-                  className="h-full rounded-full bg-gold transition-all duration-500"
-                  style={{ width: `${Math.min(100, ((subtotal - getCurrentTierMin(subtotal)) / (nextTier.min - getCurrentTierMin(subtotal))) * 100)}%` }}
-                />
-              </div>
-            </>
-          ) : (
-            <>
-              <div className="mb-1.5 flex items-center justify-between text-xs">
-                <span className="text-white/80">Add {price(nextTier.min - subtotal)} more for</span>
-                <span className="font-black text-gold">Rs.{nextTier.discount} off!</span>
-              </div>
-              <div className="h-1 w-full overflow-hidden rounded-full bg-white/20">
-                <div
-                  className="h-full rounded-full bg-gold transition-all duration-500"
-                  style={{ width: `${Math.min(100, (subtotal / nextTier.min) * 100)}%` }}
-                />
-              </div>
-            </>
-          )}
+        <div className="mt-5 rounded-xl bg-maroon-dark px-4 py-3">
+          <div className="mb-1.5 flex items-center justify-between text-xs">
+            <div className="mr-2 min-w-0 flex-1 text-white/80">
+              {!nextTier ? (
+                <span className="font-black text-gold">Rs.{discount} off applied!</span>
+              ) : discount > 0 ? (
+                <>
+                  <span className="font-black text-gold">Rs.{discount} off!</span>
+                  <span> · Add {price(nextTier.min - subtotal)} for Rs.{nextTier.discount} off</span>
+                </>
+              ) : (
+                <>
+                  <span>Add {price(nextTier.min - subtotal)} for </span>
+                  <span className="font-black text-gold">Rs.{nextTier.discount} off!</span>
+                </>
+              )}
+            </div>
+            <div className="flex shrink-0 gap-1">
+              {discountTiers.map((tier) => (
+                <span
+                  key={tier.min}
+                  className={`rounded-full px-1.5 py-0.5 text-[9px] font-black transition-all duration-500 ${
+                    subtotal >= tier.min
+                      ? "bg-gold text-maroon-dark"
+                      : "border border-white/30 text-white/40"
+                  }`}
+                >
+                  ₹{tier.discount}
+                </span>
+              ))}
+            </div>
+          </div>
+          <div className="h-1.5 w-full overflow-hidden rounded-full bg-white/20">
+            <div
+              className="h-full rounded-full bg-gold transition-all duration-500"
+              style={{ width: `${Math.min(100, (subtotal / discountTiers[discountTiers.length - 1].min) * 100)}%` }}
+            />
+          </div>
         </div>
       )}
 

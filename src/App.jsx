@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Cart from "./components/Cart.jsx";
 import BannerCarousel from "./components/BannerCarousel.jsx";
 import BpkihsGate, { hasValidBpkihsGatePass } from "./components/BpkihsGate.jsx";
@@ -11,7 +11,8 @@ import MenuSection from "./components/MenuSection.jsx";
 import MenuShelf, { shelfId } from "./components/MenuShelf.jsx";
 import SearchBar from "./components/SearchBar.jsx";
 import StickySearchCategories from "./components/StickySearchCategories.jsx";
-import { getCurrentTierMin, getDiscount, getNextTier } from "./data/offers.js";
+import MilestoneToast from "./components/MilestoneToast.jsx";
+import { discountTiers, getDiscount, getNextTier } from "./data/offers.js";
 import { categoryNames, menuCategories } from "./data/menu.js";
 import { filterCategories } from "./utils/filter.js";
 import { changeQuantity, getCartCount, price } from "./utils/order.js";
@@ -90,6 +91,20 @@ export default function App() {
   );
   const discount = getDiscount(subtotal);
   const nextTier = getNextTier(subtotal);
+
+  const [celebrating, setCelebrating] = useState(false);
+  const [celebrationDiscount, setCelebrationDiscount] = useState(0);
+  const prevDiscountRef = useRef(discount);
+  useEffect(() => {
+    if (discount > prevDiscountRef.current) {
+      setCelebrationDiscount(discount);
+      setCelebrating(true);
+      const t = setTimeout(() => setCelebrating(false), 3500);
+      prevDiscountRef.current = discount;
+      return () => clearTimeout(t);
+    }
+    prevDiscountRef.current = discount;
+  }, [discount]);
 
   function handleScrollToShelf(categoryName) {
     if (categoryName === "All") {
@@ -257,57 +272,71 @@ export default function App() {
         />
       )}
 
-      <div className="fixed bottom-4 left-3 right-3 z-50 flex flex-col gap-2 lg:hidden">
+      <div className="fixed bottom-4 left-3 right-3 z-50 flex flex-col gap-3 lg:hidden">
         {(discount > 0 || nextTier) && (
-          <div className={`flex items-center gap-3 rounded-full px-4 py-2.5 shadow-soft transition-colors duration-500 ${!nextTier ? "bg-green-800" : "bg-maroon-dark"}`}>
-            <div className="min-w-0 flex-1">
-              {!nextTier ? (
-                <div className="flex items-center justify-between text-xs">
-                  <span className="text-white/80">Discount applied</span>
-                  <span className="ml-2 shrink-0 font-black text-green-300">Rs.{discount} off!</span>
+          <div className="rounded-2xl bg-maroon-dark px-4 py-3 shadow-soft">
+            <div className="flex items-center gap-3">
+              {/* Text + progress bar */}
+              <div className="min-w-0 flex-1">
+                <p className="mb-2 text-xs text-white/80">
+                  {!nextTier ? (
+                    <span className="font-black text-gold">Max discount applied — Rs.{discount} off!</span>
+                  ) : discount > 0 ? (
+                    <><span className="font-black text-gold">Rs.{discount} off unlocked!</span><span> Add {price(nextTier.min - subtotal)} for Rs.{nextTier.discount} off</span></>
+                  ) : (
+                    <>Add <span className="font-black text-gold">{price(nextTier.min - subtotal)}</span> more to get <span className="font-black text-gold">Rs.{nextTier.discount} off!</span></>
+                  )}
+                </p>
+                <div className="h-2 w-full overflow-hidden rounded-full bg-white/20">
+                  <div
+                    className="h-full rounded-full bg-gold transition-all duration-700"
+                    style={{ width: `${Math.min(100, (subtotal / discountTiers[discountTiers.length - 1].min) * 100)}%` }}
+                  />
                 </div>
-              ) : discount > 0 ? (
-                <>
-                  <div className="mb-1 flex items-center justify-between text-xs">
-                    <span className="text-white/80">Rs.{discount} off applied · Add {price(nextTier.min - subtotal)} for Rs.{nextTier.discount} off!</span>
-                  </div>
-                  <div className="h-1 w-full overflow-hidden rounded-full bg-white/20">
+              </div>
+              {/* Milestone circles */}
+              <div className="flex shrink-0 items-center gap-2">
+                {discountTiers.map((tier) => {
+                  const unlocked = subtotal >= tier.min;
+                  return (
                     <div
-                      className="h-full rounded-full bg-gold transition-all duration-500"
-                      style={{ width: `${Math.min(100, ((subtotal - getCurrentTierMin(subtotal)) / (nextTier.min - getCurrentTierMin(subtotal))) * 100)}%` }}
-                    />
-                  </div>
-                </>
-              ) : (
-                <>
-                  <div className="mb-1 flex items-center justify-between text-xs">
-                    <span className="text-white/80">Add {price(nextTier.min - subtotal)} more for</span>
-                    <span className="ml-2 shrink-0 font-black text-gold">Rs.{nextTier.discount} off!</span>
-                  </div>
-                  <div className="h-1 w-full overflow-hidden rounded-full bg-white/20">
-                    <div
-                      className="h-full rounded-full bg-gold transition-all duration-500"
-                      style={{ width: `${Math.min(100, (subtotal / nextTier.min) * 100)}%` }}
-                    />
-                  </div>
-                </>
-              )}
+                      key={tier.min}
+                      className={`flex h-11 w-11 flex-col items-center justify-center rounded-full border-2 transition-all duration-500 ${
+                        unlocked
+                          ? "border-gold bg-gold text-maroon-dark"
+                          : "border-white/30 bg-transparent text-white/50"
+                      }`}
+                    >
+                      <span className={`text-[11px] font-black leading-none ${unlocked ? "text-maroon-dark" : "text-white/60"}`}>
+                        ₹{tier.discount}
+                      </span>
+                      <span className={`text-[9px] leading-none ${unlocked ? "text-maroon-dark/70" : "text-white/40"}`}>off</span>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
           </div>
         )}
-        <button
-          type="button"
-          onClick={openCart}
-          className={`flex h-12 w-full items-center justify-center rounded-full bg-action text-sm font-black text-maroon-dark shadow-soft ${
-            cartShaking ? "animate-cart-shake" : ""
-          }`}
-        >
-          {cartCount > 0 ? "Review order" : "View cart"}
-          <span className="ml-2 rounded-full bg-gold px-2 py-0.5 text-xs text-maroon-dark">
-            {cartCount}
-          </span>
-        </button>
+        {cartCount > 0 && (
+          <button
+            type="button"
+            onClick={openCart}
+            className={`flex h-12 w-full items-center justify-center rounded-full bg-action text-sm font-black text-maroon-dark shadow-soft ${
+              cartShaking ? "animate-cart-shake" : ""
+            }`}
+          >
+            Review order
+            <span className="ml-2 rounded-full bg-gold px-2 py-0.5 text-xs text-maroon-dark">
+              {cartCount}
+            </span>
+          </button>
+        )}
       </div>
+
+      {celebrating && (
+        <MilestoneToast discount={celebrationDiscount} onDismiss={() => setCelebrating(false)} />
+      )}
 
       <Cart
         cart={cart}
