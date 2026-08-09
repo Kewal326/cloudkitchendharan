@@ -11,7 +11,7 @@ import MenuSection from "./components/MenuSection.jsx";
 import MenuShelf, { shelfId } from "./components/MenuShelf.jsx";
 import SearchBar from "./components/SearchBar.jsx";
 import StickySearchCategories from "./components/StickySearchCategories.jsx";
-import { getDiscount, getNextTier } from "./data/offers.js";
+import { getCurrentTierMin, getDiscount, getNextTier } from "./data/offers.js";
 import { categoryNames, menuCategories } from "./data/menu.js";
 import { filterCategories } from "./utils/filter.js";
 import { changeQuantity, getCartCount, price } from "./utils/order.js";
@@ -267,10 +267,17 @@ export default function App() {
                   <span className="ml-2 shrink-0 font-black text-green-300">Rs.{discount} off!</span>
                 </div>
               ) : discount > 0 ? (
-                <div className="flex items-center justify-between text-xs">
-                  <span className="text-white/80">Rs.{discount} off applied</span>
-                  <span className="ml-2 shrink-0 font-black text-gold">Add {price(nextTier.min - subtotal)} for Rs.{nextTier.discount} off!</span>
-                </div>
+                <>
+                  <div className="mb-1 flex items-center justify-between text-xs">
+                    <span className="text-white/80">Rs.{discount} off applied · Add {price(nextTier.min - subtotal)} for Rs.{nextTier.discount} off!</span>
+                  </div>
+                  <div className="h-1 w-full overflow-hidden rounded-full bg-white/20">
+                    <div
+                      className="h-full rounded-full bg-gold transition-all duration-500"
+                      style={{ width: `${Math.min(100, ((subtotal - getCurrentTierMin(subtotal)) / (nextTier.min - getCurrentTierMin(subtotal))) * 100)}%` }}
+                    />
+                  </div>
+                </>
               ) : (
                 <>
                   <div className="mb-1 flex items-center justify-between text-xs">

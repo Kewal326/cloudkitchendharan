@@ -10,3 +10,7 @@ export function getDiscount(subtotal) {
 export function getNextTier(subtotal) {
   return discountTiers.find((t) => subtotal < t.min) ?? null;
 }
+
+export function getCurrentTierMin(subtotal) {
+  return [...discountTiers].reverse().find((t) => subtotal >= t.min)?.min ?? 0;
+}

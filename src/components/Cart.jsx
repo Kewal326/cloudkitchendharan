@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { getDiscount, getNextTier } from "../data/offers.js";
+import { getCurrentTierMin, getDiscount, getNextTier } from "../data/offers.js";
 import {
   PRIMARY_PHONE,
   formatWhatsAppChat,
@@ -62,10 +62,17 @@ function CartItems({ cart, onAdd, onRemove, notes, onNotesChange, onAddRecommend
           {!nextTier ? (
             <p className="text-xs font-black text-green-300">Rs.{discount} off applied on your order!</p>
           ) : discount > 0 ? (
-            <div className="flex items-center justify-between text-xs">
-              <span className="text-white/80">Rs.{discount} off applied</span>
-              <span className="font-black text-gold">Add {price(nextTier.min - subtotal)} for Rs.{nextTier.discount} off</span>
-            </div>
+            <>
+              <div className="mb-1.5 flex items-center justify-between text-xs">
+                <span className="text-white/80">Rs.{discount} off applied · Add {price(nextTier.min - subtotal)} for Rs.{nextTier.discount} off!</span>
+              </div>
+              <div className="h-1 w-full overflow-hidden rounded-full bg-white/20">
+                <div
+                  className="h-full rounded-full bg-gold transition-all duration-500"
+                  style={{ width: `${Math.min(100, ((subtotal - getCurrentTierMin(subtotal)) / (nextTier.min - getCurrentTierMin(subtotal))) * 100)}%` }}
+                />
+              </div>
+            </>
           ) : (
             <>
               <div className="mb-1.5 flex items-center justify-between text-xs">

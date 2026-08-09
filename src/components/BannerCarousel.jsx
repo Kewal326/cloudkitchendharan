@@ -91,7 +91,7 @@ function BoldCard({ banner }) {
         <Highlight text={banner.headline} word={banner.highlight} />
       </p>
       {banner.subtext && (
-        <p className="mt-2 text-sm font-semibold text-white/70">{banner.subtext}</p>
+        <p className="mt-2 text-sm font-black leading-tight text-white">{banner.subtext}</p>
       )}
     </div>
   );

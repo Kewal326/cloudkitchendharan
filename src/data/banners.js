@@ -1,5 +1,14 @@
 export const banners = [
   {
+    variant: "bold",
+    bg: "#E23744",
+    label: "Limited Time Offer",
+    headline: "Save up to\nRs.100!",
+    subtext: "Rs.50 off on Rs.500+ · Rs.100 off on Rs.1000+",
+    highlight: "Rs.100!",
+    celebrate: true,
+  },
+  {
     variant: "split",
     bg: "#E23744",
     label: "New Arrival",
