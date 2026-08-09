@@ -139,13 +139,13 @@ export default function MenuShelf({ category, cart, onAdd, onRemove, onImageClic
 
   return (
     <section id={shelfId(category.name)} className="py-3">
-      <div className="mb-3 flex items-baseline justify-between">
+      <div className="mb-3 flex items-center justify-between">
         <h2 className="text-base font-black text-maroon-dark">{category.name}</h2>
         {hasMore && (
           <button
             type="button"
             onClick={() => onSeeAll(category.name)}
-            className="text-sm font-bold text-maroon"
+            className="rounded-full bg-maroon/10 px-2.5 py-1 text-xs font-black text-maroon"
           >
             See all {category.items.length} →
           </button>
@@ -167,12 +167,10 @@ export default function MenuShelf({ category, cart, onAdd, onRemove, onImageClic
             type="button"
             onClick={() => onSeeAll(category.name)}
             aria-label={`See all ${category.items.length} items in ${category.name}`}
-            className="flex h-36 w-16 flex-shrink-0 items-center justify-center pr-2"
-            style={{ background: "linear-gradient(to right, transparent, white 40%)" }}
+            className="flex h-36 w-24 flex-shrink-0 flex-col items-center justify-center gap-1 rounded-xl border-2 border-dashed border-maroon/25 bg-maroon/5"
           >
-            <div className="flex h-12 w-12 items-center justify-center rounded-full border-2 border-maroon text-lg font-black text-maroon">
-              →
-            </div>
+            <span className="text-2xl font-black text-maroon">+{category.items.length - PREVIEW_COUNT}</span>
+            <span className="text-[10px] font-black uppercase tracking-wide text-maroon/60">more</span>
           </button>
         )}
       </div>
