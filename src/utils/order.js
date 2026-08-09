@@ -1,3 +1,5 @@
+import { getDiscount } from "../data/offers.js";
+
 export const PRIMARY_PHONE = "9812356907";
 export const SECONDARY_PHONE = "9709206037";
 export const WHATSAPP_PHONE = "9779812356907";
@@ -17,11 +19,13 @@ export function getCartCount(cart) {
   return Object.values(cart).reduce((sum, item) => sum + item.quantity, 0);
 }
 
+export function getCartSubtotal(cart) {
+  return Object.values(cart).reduce((sum, item) => sum + item.price * item.quantity, 0);
+}
+
 export function getCartTotal(cart) {
-  return Object.values(cart).reduce(
-    (sum, item) => sum + item.price * item.quantity,
-    0
-  );
+  const subtotal = getCartSubtotal(cart);
+  return subtotal - getDiscount(subtotal);
 }
 
 export function changeQuantity(cart, item, delta) {
@@ -45,14 +49,16 @@ export function changeQuantity(cart, item, delta) {
   return next;
 }
 
-export function formatWhatsAppOrder({ cart, notes, total, offer }) {
+export function formatWhatsAppOrder({ cart, notes }) {
+  const subtotal = getCartSubtotal(cart);
+  const discount = getDiscount(subtotal);
+  const total = subtotal - discount;
+
   const lines = Object.values(cart)
-    .filter((item) => !item.isFree)
     .map((item) => `- ${item.name} x ${item.quantity} = ${price(item.price * item.quantity)}`);
 
-  const offerUnlocked = offer && total >= offer.threshold;
-  if (offerUnlocked) {
-    lines.push(`🎁 FREE ${offer.freeItem} (offer applied)`);
+  if (discount > 0) {
+    lines.push(`💰 Discount: -${price(discount)}`);
   }
 
   return [
@@ -64,9 +70,7 @@ export function formatWhatsAppOrder({ cart, notes, total, offer }) {
     ...lines,
     "",
     `Total: ${price(total)}`,
-    ...(offerUnlocked
-      ? [`🎉 Free ${offer.freeItem} included — order above Rs.${offer.threshold}`]
-      : []),
+    ...(discount > 0 ? [`🎉 Rs.${discount} discount applied`] : []),
     "",
     "Delivery charges may apply based on delivery location.",
     "",

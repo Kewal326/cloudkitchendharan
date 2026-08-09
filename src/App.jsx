@@ -1,8 +1,7 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Cart from "./components/Cart.jsx";
 import BannerCarousel from "./components/BannerCarousel.jsx";
 import BpkihsGate, { hasValidBpkihsGatePass } from "./components/BpkihsGate.jsx";
-import Confetti from "./components/Confetti.jsx";
 import Footer from "./components/Footer.jsx";
 import Header from "./components/Header.jsx";
 import ItemBottomSheet from "./components/ItemBottomSheet.jsx";
@@ -12,7 +11,7 @@ import MenuSection from "./components/MenuSection.jsx";
 import MenuShelf, { shelfId } from "./components/MenuShelf.jsx";
 import SearchBar from "./components/SearchBar.jsx";
 import StickySearchCategories from "./components/StickySearchCategories.jsx";
-import { FREE_ITEM_ID, activeOffer } from "./data/offers.js";
+import { getDiscount, getNextTier } from "./data/offers.js";
 import { categoryNames, menuCategories } from "./data/menu.js";
 import { filterCategories } from "./utils/filter.js";
 import { changeQuantity, getCartCount, price } from "./utils/order.js";
@@ -70,9 +69,6 @@ export default function App() {
   const [cartShaking, setCartShaking] = useState(false);
   const [previewItem, setPreviewItem] = useState(null);
   const [variantItem, setVariantItem] = useState(null);
-  const [showConfetti, setShowConfetti] = useState(false);
-  const [showOfferModal, setShowOfferModal] = useState(false);
-  const confettiTimer = useRef(null);
 
   const filteredCategories = useMemo(
     () => filterCategories(menuCategories, { searchTerm, activeCategory }),
@@ -88,6 +84,13 @@ export default function App() {
   })() : filteredCategories;
   const cartCount = getCartCount(cart);
 
+  const subtotal = useMemo(
+    () => Object.values(cart).reduce((sum, item) => sum + item.price * item.quantity, 0),
+    [cart]
+  );
+  const discount = getDiscount(subtotal);
+  const nextTier = getNextTier(subtotal);
+
   function handleScrollToShelf(categoryName) {
     if (categoryName === "All") {
       window.scrollTo({ top: 0, behavior: "smooth" });
@@ -100,29 +103,6 @@ export default function App() {
     const top = el.getBoundingClientRect().top + window.scrollY - stickyHeight - 8;
     window.scrollTo({ top, behavior: "smooth" });
   }
-
-  const regularTotal = useMemo(
-    () => Object.values(cart).reduce((sum, item) => item.id === FREE_ITEM_ID ? sum : sum + item.price * item.quantity, 0),
-    [cart]
-  );
-  const offerUnlocked = !!(activeOffer && regularTotal >= activeOffer.threshold);
-  const hasFreeItem = FREE_ITEM_ID in cart;
-
-  useEffect(() => {
-    if (!activeOffer) return;
-    if (offerUnlocked && !hasFreeItem) {
-      setCart(c => ({
-        ...c,
-        [FREE_ITEM_ID]: { id: FREE_ITEM_ID, name: activeOffer.freeItem, price: 0, quantity: 1, isFree: true }
-      }));
-      clearTimeout(confettiTimer.current);
-      setShowConfetti(true);
-      setShowOfferModal(true);
-      confettiTimer.current = setTimeout(() => setShowConfetti(false), 3200);
-    } else if (!offerUnlocked && hasFreeItem) {
-      setCart(c => { const next = { ...c }; delete next[FREE_ITEM_ID]; return next; });
-    }
-  }, [offerUnlocked, hasFreeItem]);
 
   useEffect(() => {
     try { localStorage.setItem("ck_cart", JSON.stringify(cart)); } catch {}
@@ -278,24 +258,29 @@ export default function App() {
       )}
 
       <div className="fixed bottom-4 left-3 right-3 z-50 flex flex-col gap-2 lg:hidden">
-        {activeOffer && (
-          <div className={`flex items-center gap-3 rounded-full px-4 py-2.5 shadow-soft transition-colors duration-500 ${offerUnlocked ? "bg-green-800" : "bg-maroon-dark"}`}>
+        {(discount > 0 || nextTier) && (
+          <div className={`flex items-center gap-3 rounded-full px-4 py-2.5 shadow-soft transition-colors duration-500 ${!nextTier ? "bg-green-800" : "bg-maroon-dark"}`}>
             <div className="min-w-0 flex-1">
-              {offerUnlocked ? (
+              {!nextTier ? (
                 <div className="flex items-center justify-between text-xs">
-                  <span className="text-white/80">Your free treat is in the cart</span>
-                  <span className="ml-2 shrink-0 font-black text-green-300">🎁 {activeOffer.freeItem} — FREE</span>
+                  <span className="text-white/80">Discount applied</span>
+                  <span className="ml-2 shrink-0 font-black text-green-300">Rs.{discount} off!</span>
+                </div>
+              ) : discount > 0 ? (
+                <div className="flex items-center justify-between text-xs">
+                  <span className="text-white/80">Rs.{discount} off applied</span>
+                  <span className="ml-2 shrink-0 font-black text-gold">Add {price(nextTier.min - subtotal)} for Rs.{nextTier.discount} off!</span>
                 </div>
               ) : (
                 <>
                   <div className="mb-1 flex items-center justify-between text-xs">
-                    <span className="text-white/80">Add {price(activeOffer.threshold - regularTotal)} more for</span>
-                    <span className="ml-2 shrink-0 font-black text-gold">FREE {activeOffer.freeItem}!</span>
+                    <span className="text-white/80">Add {price(nextTier.min - subtotal)} more for</span>
+                    <span className="ml-2 shrink-0 font-black text-gold">Rs.{nextTier.discount} off!</span>
                   </div>
                   <div className="h-1 w-full overflow-hidden rounded-full bg-white/20">
                     <div
                       className="h-full rounded-full bg-gold transition-all duration-500"
-                      style={{ width: `${Math.min(100, (regularTotal / activeOffer.threshold) * 100)}%` }}
+                      style={{ width: `${Math.min(100, (subtotal / nextTier.min) * 100)}%` }}
                     />
                   </div>
                 </>
@@ -340,28 +325,6 @@ export default function App() {
         onRemove={() => { if (previewItem) removeItem(previewItem); }}
         onClose={closeItemDetail}
       />
-      <Confetti active={showConfetti} />
-      {showOfferModal && (
-        <div className="fixed inset-0 z-[102] flex items-center justify-center bg-maroon-dark/60 px-6">
-          <div className="w-full max-w-xs rounded-2xl bg-white px-6 pb-6 pt-8 text-center shadow-2xl">
-            <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-green-100">
-              <span className="text-4xl">🎁</span>
-            </div>
-            <p className="text-sm font-semibold uppercase tracking-widest text-stone-400">Offer unlocked</p>
-            <p className="mt-2 text-2xl font-black text-maroon-dark">Free {activeOffer.freeItem}!</p>
-            <p className="mt-1 text-sm text-stone-500">
-              Worth {price(activeOffer.freeItemPrice)} — added to your cart on us.
-            </p>
-            <button
-              type="button"
-              onClick={() => setShowOfferModal(false)}
-              className="mt-6 w-full rounded-full bg-action py-3 text-base font-black text-maroon-dark"
-            >
-              Woohoo! Thanks 🎉
-            </button>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

@@ -1,9 +1,12 @@
-// Update to change the offer. Set activeOffer to null to disable entirely.
-// Also update src/data/banners.js to reflect the offer in the banner carousel.
-export const FREE_ITEM_ID = "__free_offer__";
+export const discountTiers = [
+  { min: 500, discount: 50 },
+  { min: 1000, discount: 100 },
+];
 
-export const activeOffer = {
-  threshold: 1000,        // cart total (Rs.) needed to unlock
-  freeItem: "Masala Dosa", // shown in nudge, cart, and WhatsApp message
-  freeItemPrice: 200,     // original price — shown as strikethrough in cart
-};
+export function getDiscount(subtotal) {
+  return [...discountTiers].reverse().find((t) => subtotal >= t.min)?.discount ?? 0;
+}
+
+export function getNextTier(subtotal) {
+  return discountTiers.find((t) => subtotal < t.min) ?? null;
+}

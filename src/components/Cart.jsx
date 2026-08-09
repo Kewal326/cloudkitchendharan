@@ -1,9 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
-import { activeOffer } from "../data/offers.js";
+import { getDiscount, getNextTier } from "../data/offers.js";
 import {
   PRIMARY_PHONE,
   formatWhatsAppChat,
   formatWhatsAppOrder,
+  getCartSubtotal,
   getCartTotal,
   getWhatsAppUrl,
   price
@@ -12,10 +13,9 @@ import CartRecommendations from "./CartRecommendations.jsx";
 
 function CartItems({ cart, onAdd, onRemove, notes, onNotesChange, onAddRecommended }) {
   const items = Object.values(cart);
-  const regularTotal = items.reduce(
-    (sum, item) => (item.isFree ? sum : sum + item.price * item.quantity), 0
-  );
-  const offerUnlocked = !!(activeOffer && regularTotal >= activeOffer.threshold);
+  const subtotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const discount = getDiscount(subtotal);
+  const nextTier = getNextTier(subtotal);
 
   return (
     <>
@@ -25,70 +25,57 @@ function CartItems({ cart, onAdd, onRemove, notes, onNotesChange, onAddRecommend
         </p>
       ) : (
         <div className="space-y-3">
-          {items.map((item) =>
-            item.isFree ? (
-              <div key={item.id} className="grid grid-cols-[1fr_auto] items-center gap-3">
-                <div>
-                  <div className="flex items-center gap-2">
-                    <p className="text-sm font-extrabold text-maroon-dark">{item.name}</p>
-                    <span className="rounded-full bg-green-100 px-2 py-0.5 text-[10px] font-black uppercase tracking-wide text-green-700">
-                      FREE
-                    </span>
-                  </div>
-                  <p className="text-xs text-stone-400">
-                    <span className="line-through">{price(activeOffer?.freeItemPrice ?? 0)}</span>
-                    <span className="ml-1 font-bold text-green-600">Rs.0</span>
-                  </p>
-                </div>
-                <span className="text-lg" aria-label="Gift">🎁</span>
+          {items.map((item) => (
+            <div key={item.id} className="grid grid-cols-[1fr_auto] gap-3">
+              <div>
+                <p className="text-sm font-extrabold text-maroon-dark">{item.name}</p>
+                <p className="text-xs text-stone-600">
+                  {price(item.price)} x {item.quantity}
+                </p>
               </div>
-            ) : (
-              <div key={item.id} className="grid grid-cols-[1fr_auto] gap-3">
-                <div>
-                  <p className="text-sm font-extrabold text-maroon-dark">{item.name}</p>
-                  <p className="text-xs text-stone-600">
-                    {price(item.price)} x {item.quantity}
-                  </p>
-                </div>
-                <div className="grid h-8 grid-cols-[1.75rem_1.75rem_1.75rem] overflow-hidden rounded-full border border-maroon/20 bg-white text-maroon">
-                  <button
-                    type="button"
-                    onClick={() => onRemove(item)}
-                    className="font-black hover:bg-amber-50"
-                    aria-label={`Remove one ${item.name}`}
-                  >
-                    -
-                  </button>
-                  <span className="self-center text-center text-xs font-black">{item.quantity}</span>
-                  <button
-                    type="button"
-                    onClick={() => onAdd(item)}
-                    className="font-black hover:bg-amber-50"
-                    aria-label={`Add one ${item.name}`}
-                  >
-                    +
-                  </button>
-                </div>
+              <div className="grid h-8 grid-cols-[1.75rem_1.75rem_1.75rem] overflow-hidden rounded-full border border-maroon/20 bg-white text-maroon">
+                <button
+                  type="button"
+                  onClick={() => onRemove(item)}
+                  className="font-black hover:bg-amber-50"
+                  aria-label={`Remove one ${item.name}`}
+                >
+                  -
+                </button>
+                <span className="self-center text-center text-xs font-black">{item.quantity}</span>
+                <button
+                  type="button"
+                  onClick={() => onAdd(item)}
+                  className="font-black hover:bg-amber-50"
+                  aria-label={`Add one ${item.name}`}
+                >
+                  +
+                </button>
               </div>
-            )
-          )}
+            </div>
+          ))}
         </div>
       )}
 
-      {activeOffer && (
-        <div className={`mt-5 rounded-xl px-4 py-3 transition-colors duration-500 ${offerUnlocked ? "bg-green-800" : "bg-maroon-dark"}`}>
-          {offerUnlocked ? (
-            <p className="text-xs font-black text-green-300">🎁 {activeOffer.freeItem} — added to your order for FREE!</p>
+      {(discount > 0 || nextTier) && (
+        <div className={`mt-5 rounded-xl px-4 py-3 transition-colors duration-500 ${!nextTier ? "bg-green-800" : "bg-maroon-dark"}`}>
+          {!nextTier ? (
+            <p className="text-xs font-black text-green-300">Rs.{discount} off applied on your order!</p>
+          ) : discount > 0 ? (
+            <div className="flex items-center justify-between text-xs">
+              <span className="text-white/80">Rs.{discount} off applied</span>
+              <span className="font-black text-gold">Add {price(nextTier.min - subtotal)} for Rs.{nextTier.discount} off</span>
+            </div>
           ) : (
             <>
               <div className="mb-1.5 flex items-center justify-between text-xs">
-                <span className="text-white/80">Add {price(activeOffer.threshold - regularTotal)} more for</span>
-                <span className="font-black text-gold">FREE {activeOffer.freeItem}!</span>
+                <span className="text-white/80">Add {price(nextTier.min - subtotal)} more for</span>
+                <span className="font-black text-gold">Rs.{nextTier.discount} off!</span>
               </div>
               <div className="h-1 w-full overflow-hidden rounded-full bg-white/20">
                 <div
                   className="h-full rounded-full bg-gold transition-all duration-500"
-                  style={{ width: `${Math.min(100, (regularTotal / activeOffer.threshold) * 100)}%` }}
+                  style={{ width: `${Math.min(100, (subtotal / nextTier.min) * 100)}%` }}
                 />
               </div>
             </>
@@ -113,15 +100,29 @@ function CartItems({ cart, onAdd, onRemove, notes, onNotesChange, onAddRecommend
 
 function CartFooterActions({ cart, notes }) {
   const items = Object.values(cart);
-  const total = getCartTotal(cart);
+  const subtotal = getCartSubtotal(cart);
+  const discount = getDiscount(subtotal);
+  const total = subtotal - discount;
   const orderText = useMemo(
-    () => formatWhatsAppOrder({ cart, notes, total, offer: activeOffer }),
-    [cart, notes, total]
+    () => formatWhatsAppOrder({ cart, notes }),
+    [cart, notes]
   );
   const whatsAppText = items.length ? orderText : formatWhatsAppChat();
 
   return (
     <>
+      {discount > 0 && (
+        <>
+          <div className="mb-1 flex items-center justify-between text-sm text-stone-500">
+            <span>Subtotal</span>
+            <span>{price(subtotal)}</span>
+          </div>
+          <div className="mb-3 flex items-center justify-between text-sm font-bold text-green-700">
+            <span>Discount</span>
+            <span>-{price(discount)}</span>
+          </div>
+        </>
+      )}
       <div className="mb-3 flex items-center justify-between text-base font-black text-maroon-dark">
         <span>Total</span>
         <span>{price(total)}</span>
@@ -210,7 +211,6 @@ export default function Cart({ cart, onAdd, onRemove, isOpen, onClose, desktop =
         isOpen ? "translate-x-0" : "translate-x-full"
       }`}
     >
-      {/* Header with back button */}
       <div className="flex flex-shrink-0 items-center gap-3 border-b border-maroon/10 bg-white px-4 py-3">
         <button
           type="button"
@@ -226,7 +226,6 @@ export default function Cart({ cart, onAdd, onRemove, isOpen, onClose, desktop =
         </div>
       </div>
 
-      {/* Scrollable items — no height tricks needed */}
       <div className="flex-1 overflow-y-auto p-4">
         <CartItems
           cart={cart}
@@ -238,7 +237,6 @@ export default function Cart({ cart, onAdd, onRemove, isOpen, onClose, desktop =
         />
       </div>
 
-      {/* Sticky footer */}
       <div className="flex-shrink-0 border-t border-maroon/10 bg-white px-4 py-4">
         <CartFooterActions cart={cart} notes={notes} />
       </div>
