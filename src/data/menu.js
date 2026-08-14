@@ -2,16 +2,27 @@ const categories = [
   {
     name: "Popular",
     items: [
-      ["Khorsani Achar", 500, "Tangy spicy khorsani pickle, homemade and full of flavour.", ["pickle", "achar", "condiment"], [{ label: "500 Gram", price: 500 }, { label: "1 Kg", price: 1000 }]],
-      ["Jhol Momo", 250, "Vegetarian momos served in warm spicy jhol sauce.", ["momo", "jhol", "snack"]],
       ["Mix Veg Pizza", 600, "Cheesy pizza topped with capsicum, corn, onion, and vegetables.", ["pizza", "cheese", "popular", "best seller"]],
-      ["French Fries (Peri Peri / Salty)", 150, "Crisp fries tossed salty or peri peri, served hot.", ["fries", "potato", "snack"]],
-      ["Vada Pau (1 pc)", 150, "Mumbai-style potato vada in soft pau with chutney.", ["snack", "street food", "potato", "best seller"]],
+      ["Rice Kheer", 500, "Classic rice kheer cooked with milk and sugar.", ["vrat", "sweet", "kheer"]],
+      ["Jhol Momo", 250, "Vegetarian momos served in warm spicy jhol sauce.", ["momo", "jhol", "snack"]],
+      ["Masala Dosa", 200, "Crisp dosa filled with spiced potato masala, served with chutney and sambar.", ["dosa", "masala", "south indian", "best seller"]],
+      ["Butter Naan (1 pc)", 100, "Soft naan brushed with butter.", ["naan", "butter", "bread", "best seller"]],
       ["Paneer Butter Masala", 450, "Paneer cubes simmered in rich buttery tomato gravy.", ["paneer", "sabji", "curry", "best seller"]],
-      ["Veg Burger (1 pc)", 300, "Veg patty burger with cheese, lettuce, and house sauce.", ["burger", "snack", "kids", "best seller"]],
-      ["Garlic Naan (1 pc)", 120, "Naan topped with garlic and herbs.", ["naan", "garlic", "bread"]],
-      ["Jeera Rice", 150, "Basmati-style rice tempered with cumin.", ["rice", "jeera", "simple"]],
-      ["Sabudana Khichdi", 350, "Light vrat-friendly sabudana with peanuts, potato, and herbs.", ["vrat", "fasting", "sabudana", "best seller"]],
+      ["Aloo Paratha (1 pc)", 120, "Stuffed potato paratha with homestyle spices.", ["paratha", "aloo", "bread", "best seller"]],
+      ["Aloo Stuffed Kulcha", 200, "Soft kulcha stuffed with spiced potato filling.", ["kulcha", "aloo", "bread"]],
+      ["Matar Paneer", 500, "Paneer and green peas cooked in a homestyle spiced gravy.", ["paneer", "matar", "sabji", "best seller"]],
+      ["Pakora Kadhi", 250, "Kadhi served with soft pakora pieces.", ["kadhi", "pakora", "comfort", "best seller"]],
+      ["Fry Rice", 190, "Vegetable fried rice with Indo-Chinese seasoning.", ["rice", "chinese", "vegetables", "best seller"]],
+      ["Veg Chowmin", 180, "Stir-fried noodles with fresh vegetables and sauces.", ["noodles", "chinese", "quick", "best seller"]],
+      ["Momo", 120, "Steamed vegetarian momos served with spicy chutney.", ["momo", "snack", "veg", "best seller"]],
+      ["Suji Halwa", 450, "Semolina halwa cooked with ghee and dry fruits.", ["vrat", "sweet", "halwa"]],
+      ["Red Sauce Pasta", 400, "Pasta tossed in tangy tomato sauce with vegetables.", ["pasta", "italian", "tomato", "best seller"]],
+      ["Dark Desire Waffle Slice", 200, "Tree O' Slice waffle with rich dark chocolate flavor.", ["waffle", "dessert", "chocolate", "best seller"]],
+      ["Cheese Sandwich (1 pc)", 220, "Grilled sandwich layered with melted cheese.", ["sandwich", "cheese", "snack", "best seller"]],
+      ["Nachos With Salsa", 250, "Crunchy nachos served with bright tomato salsa.", ["nachos", "salsa", "sharing", "best seller"]],
+      ["Crispy Corn", 250, "Golden fried corn kernels with peppery seasoning.", ["corn", "crispy", "sharing", "best seller"]],
+      ["Chola Bhatura", 180, "Fluffy bhatura served with spiced chola.", ["chola", "bhatura", "street food"]],
+      ["Idli Sambar", 300, "Soft idli served with vegetable sambar.", ["idli", "sambar", "south indian"]],
       ["Virgin Mojito", 215, "Minty virgin mojito refresher.", ["mojito", "mint", "cold drink"]]
     ]
   },
@@ -52,6 +63,20 @@ const categories = [
       ["Aloo Matar", 300, "Potato and green peas cooked in homestyle spiced gravy.", ["aloo", "matar", "sabji"]],
       ["Mix Veg", 500, "Mixed vegetables cooked in a flavourful gravy.", ["sabji", "vegetables", "mix veg"]],
       ["Gatta Sabji", 400, "Rajasthani gatta dumplings cooked in spiced gravy.", ["sabji", "gatta", "rajasthani"]]
+    ]
+  },
+  {
+    name: "Sweets & Desserts",
+    items: [
+      ["Rice Kheer", 500, "Classic rice kheer cooked with milk and sugar.", ["sweet", "dessert", "kheer"]],
+      ["Sabudana Kheer", 500, "Sweet sabudana kheer with creamy texture.", ["sweet", "dessert", "kheer"]],
+      ["Makhana Kheer", 500, "Creamy makhana kheer for vrat dessert.", ["sweet", "dessert", "kheer", "makhana"]],
+      ["Sewai Kheer", 500, "Sweet vermicelli kheer with creamy texture.", ["sweet", "dessert", "kheer"]],
+      ["Suji Halwa", 450, "Semolina halwa cooked with ghee and dry fruits.", ["sweet", "dessert", "halwa", "best seller"]],
+      ["Besan Halwa", 450, "Gram flour halwa cooked with ghee.", ["sweet", "dessert", "halwa"]],
+      ["Atta Halwa", 400, "Whole wheat halwa cooked with ghee.", ["sweet", "dessert", "halwa"]],
+      ["Bread Halwa", 550, "Rich bread halwa cooked with ghee and milk.", ["sweet", "dessert", "halwa"]],
+      ["Aloo Seera", 450, "Sweet fasting-style aloo seera.", ["sweet", "dessert", "aloo"]],
     ]
   },
   {
@@ -98,16 +123,7 @@ const categories = [
       ["Aloo Sabudana Tikki", 350, "Crisp tikki made with potato and sabudana.", ["vrat", "sabudana", "tikki"]],
       ["Paneer Sabji With Tomato", 450, "Paneer sabji cooked with tomato gravy.", ["vrat", "paneer", "tomato"]],
       ["Paneer Sabji Without Tomato", 500, "Paneer sabji prepared without tomato.", ["vrat", "paneer", "no tomato"]],
-      ["Aloo Seera", 450, "Sweet fasting-style aloo seera.", ["vrat", "sweet", "aloo", "best seller"]],
-      ["Sabudana Kheer", 500, "Sweet sabudana kheer with creamy texture.", ["vrat", "sweet", "kheer", "best seller"]],
-      ["Makhana Kheer", 500, "Creamy makhana kheer for vrat dessert.", ["vrat", "makhana", "kheer"]],
       ["Salad Raita", 250, "Fresh salad raita with curd and vegetables.", ["vrat", "raita", "salad"]],
-      ["Sewai Kheer", 500, "Sweet vermicelli kheer with creamy texture.", ["vrat", "sweet", "kheer"]],
-      ["Rice Kheer", 500, "Classic rice kheer cooked with milk and sugar.", ["vrat", "sweet", "kheer"]],
-      ["Suji Halwa", 450, "Semolina halwa cooked with ghee and dry fruits.", ["vrat", "sweet", "halwa"]],
-      ["Besan Halwa", 450, "Gram flour halwa cooked with ghee.", ["vrat", "sweet", "halwa"]],
-      ["Atta Halwa", 400, "Whole wheat halwa cooked with ghee.", ["vrat", "sweet", "halwa"]],
-      ["Bread Halwa", 550, "Rich bread halwa cooked with ghee and milk.", ["vrat", "sweet", "halwa"]],
     ]
   },
   {
