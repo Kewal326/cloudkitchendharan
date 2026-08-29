@@ -6,7 +6,7 @@ function randomBetween(a, b) {
   return a + Math.random() * (b - a);
 }
 
-export default function MilestoneToast({ discount, onDismiss }) {
+export default function MilestoneToast({ discount, freeLabel, onDismiss }) {
   const pieces = useRef(
     [...Array(28)].map((_, i) => {
       const angle = (i * 360) / 28 + randomBetween(-8, 8);
@@ -77,8 +77,18 @@ export default function MilestoneToast({ discount, onDismiss }) {
             }}
             className="relative text-center"
           >
-            <p className="text-5xl font-black text-white">Rs.{discount} off!</p>
-            <p className="mt-1 text-base font-semibold text-white/90">saved on your order</p>
+            {freeLabel ? (
+              <>
+                <p className="text-4xl font-black text-white">🎁 Free!</p>
+                <p className="mt-1 text-lg font-black text-gold">{freeLabel}</p>
+                <p className="mt-0.5 text-sm font-semibold text-white/90">added to your order</p>
+              </>
+            ) : (
+              <>
+                <p className="text-5xl font-black text-white">Rs.{discount} off!</p>
+                <p className="mt-1 text-base font-semibold text-white/90">saved on your order</p>
+              </>
+            )}
           </div>
         </div>
       </div>

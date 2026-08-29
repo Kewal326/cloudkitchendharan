@@ -3,9 +3,9 @@ export const banners = [
     variant: "bold",
     bg: "#E23744",
     label: "Limited Time Offer",
-    headline: "Save up to\nRs.100!",
-    subtext: "Rs.100 off on orders above Rs.1000!", // when 500 tier active: "Rs.50 off on Rs.500+ · Rs.100 off on Rs.1000+"
-    highlight: "Rs.100!",
+    headline: "Free Momo +\nCold Drink!",
+    subtext: "On orders above Rs.1000", // when cash tiers active: "Rs.50 off on Rs.500+ · Rs.100 off on Rs.1000+"
+    highlight: "Free Momo +",
     celebrate: true,
   },
   {

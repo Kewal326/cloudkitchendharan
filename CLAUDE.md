@@ -53,22 +53,36 @@ Never read `cart[item.id]?.quantity` directly for variant items — it will alwa
 Defined in `src/data/offers.js` with **feature flags** at the top:
 
 ```js
-const TIER_500_ENABLED = false;  // flip to true to re-enable Rs.50 off at Rs.500
-const TIER_1000_ENABLED = true;
+const TIER_500_ENABLED = false;   // flip to true to re-enable Rs.50 off at Rs.500
+const TIER_1000_ENABLED = false;  // flip to true to re-enable Rs.100 off at Rs.1000
 
 export const discountTiers = [
   ...(TIER_500_ENABLED  ? [{ min: 500,  discount: 50  }] : []),
   ...(TIER_1000_ENABLED ? [{ min: 1000, discount: 100 }] : []),
 ];
+
+// Current active offer: free item at Rs.1000
+export const FREE_ITEM_OFFER_ENABLED = true;
+export const freeItemOffer = {
+  minOrder: 1000,
+  label: "Free Momo + Cold Drink",
+  items: [
+    { id: "momo",              name: "Momo",                  price: 120 },
+    { id: "coke-fanta-sprite", name: "Coke / Fanta / Sprite", price: 60  },
+  ],
+};
 ```
 
-To re-enable the Rs.500 tier: set `TIER_500_ENABLED = true` and update the banner subtext in `banners.js` (old text is in a comment on that line).
+To re-enable a cash discount tier: flip its flag and update the banner in `banners.js` (old text is in a comment on that line).
+
+Free items are auto-injected into the cart via a `useEffect` in `App.jsx` that watches `subtotal`. They use `__free__` id prefix, `price: 0`, `isFree: true`, `originalPrice: N`. Since price is 0, they don't affect `getCartSubtotal` or trigger re-injection loops.
 
 Key helpers: `getDiscount(subtotal)`, `getNextTier(subtotal)`, `getCurrentTierMin(subtotal)`
 
 ## Offer UI
-- **Bottom bar** (mobile): shows tier progress with milestone circles (₹50, ₹100), tracks 0→maxTier always — never resets between tiers
-- **MilestoneToast**: fires mid-screen with CSS confetti when a tier is first crossed in a session. Does NOT fire on page reload from saved cart (`prevDiscountRef` initialises to current discount)
+- **Bottom bar** (mobile): shows free item offer progress bar when `FREE_ITEM_OFFER_ENABLED`; turns green when unlocked. Cash discount strip also appears when tiers are active.
+- **MilestoneToast** (`MilestoneToast.jsx`): fires mid-screen with CSS confetti when a tier/offer is first crossed in a session. Pass `discount` for cash discount toast, `freeLabel` for free item toast. Does NOT fire on page reload (`prevDiscountRef` initialises to current discount).
+- **Cart**: free items appear in a green "Complimentary" section with no +/- controls. Free items are listed as FREE in the footer summary and in the WhatsApp order message.
 - Cart button only shows when `cartCount > 0`
 
 ## Banner carousel

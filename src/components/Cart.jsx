@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { discountTiers, getDiscount, getNextTier } from "../data/offers.js";
+import { FREE_ITEM_OFFER_ENABLED, freeItemOffer } from "../data/offers.js";
 import {
   PRIMARY_PHONE,
   formatWhatsAppChat,
@@ -12,20 +13,23 @@ import {
 import CartRecommendations from "./CartRecommendations.jsx";
 
 function CartItems({ cart, onAdd, onRemove, notes, onNotesChange, onAddRecommended }) {
-  const items = Object.values(cart);
-  const subtotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const allItems = Object.values(cart);
+  const paidItems = allItems.filter((item) => !item.isFree);
+  const freeItems = allItems.filter((item) => item.isFree);
+  const subtotal = paidItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
   const discount = getDiscount(subtotal);
   const nextTier = getNextTier(subtotal);
+  const freeItemUnlocked = FREE_ITEM_OFFER_ENABLED && subtotal >= freeItemOffer.minOrder;
 
   return (
     <>
-      {items.length === 0 ? (
+      {paidItems.length === 0 ? (
         <p className="rounded-lg bg-amber-50 p-4 text-sm font-semibold text-maroon">
           Your cart is empty.
         </p>
       ) : (
         <div className="space-y-3">
-          {items.map((item) => (
+          {paidItems.map((item) => (
             <div key={item.id} className="grid grid-cols-[1fr_auto] gap-3">
               <div>
                 <p className="text-sm font-extrabold text-maroon-dark">{item.name}</p>
@@ -57,8 +61,43 @@ function CartItems({ cart, onAdd, onRemove, notes, onNotesChange, onAddRecommend
         </div>
       )}
 
+      {/* Complimentary items section */}
+      {freeItems.length > 0 && (
+        <div className="mt-4 rounded-xl border border-green-200 bg-green-50 px-4 py-3">
+          <p className="mb-2 text-xs font-black uppercase tracking-wide text-green-800">🎁 Complimentary</p>
+          <div className="space-y-2">
+            {freeItems.map((item) => (
+              <div key={item.id} className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-extrabold text-green-900">{item.name}</p>
+                  <p className="text-xs text-green-700 line-through">{price(item.originalPrice)}</p>
+                </div>
+                <span className="rounded-full bg-green-700 px-2.5 py-0.5 text-xs font-black text-white">FREE</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Free item offer progress strip */}
+      {FREE_ITEM_OFFER_ENABLED && !freeItemUnlocked && paidItems.length > 0 && (
+        <div className="mt-4 rounded-xl bg-maroon-dark px-4 py-3">
+          <p className="mb-1.5 text-xs text-white/80">
+            Add <span className="font-black text-gold">{price(freeItemOffer.minOrder - subtotal)}</span> more for{" "}
+            <span className="font-black text-gold">Free {freeItemOffer.label}!</span>
+          </p>
+          <div className="h-1.5 w-full overflow-hidden rounded-full bg-white/20">
+            <div
+              className="h-full rounded-full bg-gold transition-all duration-500"
+              style={{ width: `${Math.min(100, (subtotal / freeItemOffer.minOrder) * 100)}%` }}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* Cash discount tier strip */}
       {(discount > 0 || nextTier) && (
-        <div className="mt-5 rounded-xl bg-maroon-dark px-4 py-3">
+        <div className="mt-4 rounded-xl bg-maroon-dark px-4 py-3">
           <div className="mb-1.5 flex items-center justify-between text-xs">
             <div className="mr-2 min-w-0 flex-1 text-white/80">
               {!nextTier ? (
@@ -115,7 +154,8 @@ function CartItems({ cart, onAdd, onRemove, notes, onNotesChange, onAddRecommend
 }
 
 function CartFooterActions({ cart, notes }) {
-  const items = Object.values(cart);
+  const allItems = Object.values(cart);
+  const freeItems = allItems.filter((item) => item.isFree);
   const subtotal = getCartSubtotal(cart);
   const discount = getDiscount(subtotal);
   const total = subtotal - discount;
@@ -123,21 +163,27 @@ function CartFooterActions({ cart, notes }) {
     () => formatWhatsAppOrder({ cart, notes }),
     [cart, notes]
   );
-  const whatsAppText = items.length ? orderText : formatWhatsAppChat();
+  const whatsAppText = allItems.length ? orderText : formatWhatsAppChat();
 
   return (
     <>
+      {(discount > 0 || freeItems.length > 0) && (
+        <div className="mb-1 flex items-center justify-between text-sm text-stone-500">
+          <span>Subtotal</span>
+          <span>{price(subtotal)}</span>
+        </div>
+      )}
+      {freeItems.length > 0 && (
+        <div className="mb-1 flex items-center justify-between text-sm font-bold text-green-700">
+          <span>🎁 {freeItems.map((f) => f.name).join(" + ")}</span>
+          <span>FREE</span>
+        </div>
+      )}
       {discount > 0 && (
-        <>
-          <div className="mb-1 flex items-center justify-between text-sm text-stone-500">
-            <span>Subtotal</span>
-            <span>{price(subtotal)}</span>
-          </div>
-          <div className="mb-3 flex items-center justify-between text-sm font-bold text-green-700">
-            <span>Discount</span>
-            <span>-{price(discount)}</span>
-          </div>
-        </>
+        <div className="mb-3 flex items-center justify-between text-sm font-bold text-green-700">
+          <span>Discount</span>
+          <span>-{price(discount)}</span>
+        </div>
       )}
       <div className="mb-3 flex items-center justify-between text-base font-black text-maroon-dark">
         <span>Total</span>

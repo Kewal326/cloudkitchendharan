@@ -16,11 +16,15 @@ export function getItemQuantity(cart, item) {
 }
 
 export function getCartCount(cart) {
-  return Object.values(cart).reduce((sum, item) => sum + item.quantity, 0);
+  return Object.values(cart)
+    .filter((item) => !item.isFree)
+    .reduce((sum, item) => sum + item.quantity, 0);
 }
 
 export function getCartSubtotal(cart) {
-  return Object.values(cart).reduce((sum, item) => sum + item.price * item.quantity, 0);
+  return Object.values(cart)
+    .filter((item) => !item.isFree)
+    .reduce((sum, item) => sum + item.price * item.quantity, 0);
 }
 
 export function getCartTotal(cart) {
@@ -50,12 +54,22 @@ export function changeQuantity(cart, item, delta) {
 }
 
 export function formatWhatsAppOrder({ cart, notes }) {
+  const allItems = Object.values(cart);
+  const paidItems = allItems.filter((item) => !item.isFree);
+  const freeItems = allItems.filter((item) => item.isFree);
   const subtotal = getCartSubtotal(cart);
   const discount = getDiscount(subtotal);
   const total = subtotal - discount;
 
-  const lines = Object.values(cart)
-    .map((item) => `- ${item.name} x ${item.quantity} = ${price(item.price * item.quantity)}`);
+  const lines = paidItems.map(
+    (item) => `- ${item.name} x ${item.quantity} = ${price(item.price * item.quantity)}`
+  );
+
+  if (freeItems.length > 0) {
+    lines.push("");
+    lines.push("🎁 Complimentary (Rs.1000+ offer):");
+    freeItems.forEach((item) => lines.push(`- ${item.name} x ${item.quantity} (FREE)`));
+  }
 
   if (discount > 0) {
     lines.push(`💰 Discount: -${price(discount)}`);

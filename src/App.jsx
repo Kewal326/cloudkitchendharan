@@ -12,7 +12,7 @@ import MenuShelf, { shelfId } from "./components/MenuShelf.jsx";
 import SearchBar from "./components/SearchBar.jsx";
 import StickySearchCategories from "./components/StickySearchCategories.jsx";
 import MilestoneToast from "./components/MilestoneToast.jsx";
-import { discountTiers, getDiscount, getNextTier } from "./data/offers.js";
+import { FREE_ITEM_OFFER_ENABLED, discountTiers, freeItemOffer, getDiscount, getNextTier } from "./data/offers.js";
 import { categoryNames, menuCategories } from "./data/menu.js";
 import { filterCategories } from "./utils/filter.js";
 import { changeQuantity, getCartCount, price } from "./utils/order.js";
@@ -86,11 +86,33 @@ export default function App() {
   const cartCount = getCartCount(cart);
 
   const subtotal = useMemo(
-    () => Object.values(cart).reduce((sum, item) => sum + item.price * item.quantity, 0),
+    () => Object.values(cart).filter((i) => !i.isFree).reduce((sum, item) => sum + item.price * item.quantity, 0),
     [cart]
   );
   const discount = getDiscount(subtotal);
   const nextTier = getNextTier(subtotal);
+  const freeItemUnlocked = FREE_ITEM_OFFER_ENABLED && subtotal >= freeItemOffer.minOrder;
+
+  // Auto-inject / remove free items when subtotal crosses the threshold
+  useEffect(() => {
+    if (!FREE_ITEM_OFFER_ENABLED) return;
+    setCart((current) => {
+      const next = { ...current };
+      if (subtotal >= freeItemOffer.minOrder) {
+        freeItemOffer.items.forEach((fi) => {
+          const freeId = `__free__${fi.id}`;
+          if (!next[freeId]) {
+            next[freeId] = { id: freeId, name: fi.name, price: 0, originalPrice: fi.price, quantity: 1, isFree: true };
+          }
+        });
+      } else {
+        freeItemOffer.items.forEach((fi) => {
+          delete next[`__free__${fi.id}`];
+        });
+      }
+      return next;
+    });
+  }, [subtotal]);
 
   const [celebrating, setCelebrating] = useState(false);
   const [celebrationDiscount, setCelebrationDiscount] = useState(0);
@@ -105,6 +127,18 @@ export default function App() {
     }
     prevDiscountRef.current = discount;
   }, [discount]);
+
+  const [celebratingFreeItem, setCelebratingFreeItem] = useState(false);
+  const prevFreeItemUnlockedRef = useRef(freeItemUnlocked);
+  useEffect(() => {
+    if (freeItemUnlocked && !prevFreeItemUnlockedRef.current) {
+      setCelebratingFreeItem(true);
+      const t = setTimeout(() => setCelebratingFreeItem(false), 3500);
+      prevFreeItemUnlockedRef.current = true;
+      return () => clearTimeout(t);
+    }
+    prevFreeItemUnlockedRef.current = freeItemUnlocked;
+  }, [freeItemUnlocked]);
 
   function handleScrollToShelf(categoryName) {
     if (categoryName === "All") {
@@ -273,10 +307,33 @@ export default function App() {
       )}
 
       <div className="fixed bottom-4 left-3 right-3 z-50 flex flex-col gap-3 lg:hidden">
+        {/* Free item offer strip */}
+        {FREE_ITEM_OFFER_ENABLED && (
+          <div className={`rounded-2xl px-4 py-3 shadow-soft transition-colors duration-500 ${freeItemUnlocked ? "bg-green-800" : "bg-maroon-dark"}`}>
+            {freeItemUnlocked ? (
+              <p className="text-center text-xs font-black text-white">
+                🎁 Free {freeItemOffer.label} added to your order!
+              </p>
+            ) : (
+              <>
+                <p className="mb-2 text-xs text-white/80">
+                  Add <span className="font-black text-gold">{price(freeItemOffer.minOrder - subtotal)}</span> more for{" "}
+                  <span className="font-black text-gold">Free {freeItemOffer.label}!</span>
+                </p>
+                <div className="h-2 w-full overflow-hidden rounded-full bg-white/20">
+                  <div
+                    className="h-full rounded-full bg-gold transition-all duration-700"
+                    style={{ width: `${Math.min(100, (subtotal / freeItemOffer.minOrder) * 100)}%` }}
+                  />
+                </div>
+              </>
+            )}
+          </div>
+        )}
+        {/* Cash discount tier strip (hidden when both tiers are off) */}
         {(discount > 0 || nextTier) && (
           <div className="rounded-2xl bg-maroon-dark px-4 py-3 shadow-soft">
             <div className="flex items-center gap-3">
-              {/* Text + progress bar */}
               <div className="min-w-0 flex-1">
                 <p className="mb-2 text-xs text-white/80">
                   {!nextTier ? (
@@ -294,7 +351,6 @@ export default function App() {
                   />
                 </div>
               </div>
-              {/* Milestone circles */}
               <div className="flex shrink-0 items-center gap-2">
                 {discountTiers.map((tier) => {
                   const unlocked = subtotal >= tier.min;
@@ -302,14 +358,10 @@ export default function App() {
                     <div
                       key={tier.min}
                       className={`flex h-11 w-11 flex-col items-center justify-center rounded-full border-2 transition-all duration-500 ${
-                        unlocked
-                          ? "border-gold bg-gold text-maroon-dark"
-                          : "border-white/30 bg-transparent text-white/50"
+                        unlocked ? "border-gold bg-gold text-maroon-dark" : "border-white/30 bg-transparent text-white/50"
                       }`}
                     >
-                      <span className={`text-[11px] font-black leading-none ${unlocked ? "text-maroon-dark" : "text-white/60"}`}>
-                        ₹{tier.discount}
-                      </span>
+                      <span className={`text-[11px] font-black leading-none ${unlocked ? "text-maroon-dark" : "text-white/60"}`}>₹{tier.discount}</span>
                       <span className={`text-[9px] leading-none ${unlocked ? "text-maroon-dark/70" : "text-white/40"}`}>off</span>
                     </div>
                   );
@@ -336,6 +388,9 @@ export default function App() {
 
       {celebrating && (
         <MilestoneToast discount={celebrationDiscount} onDismiss={() => setCelebrating(false)} />
+      )}
+      {celebratingFreeItem && (
+        <MilestoneToast freeLabel={freeItemOffer.label} onDismiss={() => setCelebratingFreeItem(false)} />
       )}
 
       <Cart
