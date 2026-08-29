@@ -183,6 +183,9 @@ export default function App() {
     }
     setCart((current) => changeQuantity(current, item, 1));
     triggerCartShake();
+    if (typeof fbq !== "undefined") {
+      fbq("track", "AddToCart", { value: item.price, currency: "NPR", content_name: item.name });
+    }
   }
 
   function removeItem(item) {
@@ -409,6 +412,9 @@ export default function App() {
           setCart((current) => changeQuantity(current, v, 1));
           triggerCartShake();
           setVariantItem(null);
+          if (typeof fbq !== "undefined") {
+            fbq("track", "AddToCart", { value: v.price, currency: "NPR", content_name: v.name });
+          }
         }}
         onClose={() => setVariantItem(null)}
       />
