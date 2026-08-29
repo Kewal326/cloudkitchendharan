@@ -214,6 +214,9 @@ export default function App() {
   function openCart() {
     setIsCartOpen(true);
     openCartUrl();
+    if (typeof fbq !== "undefined" && cartCount > 0) {
+      fbq("track", "InitiateCheckout", { value: subtotal, currency: "NPR", num_items: cartCount });
+    }
   }
 
   function closeCart() {

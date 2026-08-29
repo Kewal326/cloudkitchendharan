@@ -196,6 +196,11 @@ function CartFooterActions({ cart, notes }) {
         href={getWhatsAppUrl(whatsAppText)}
         target="_blank"
         rel="noreferrer"
+        onClick={() => {
+          if (typeof fbq !== "undefined" && allItems.length > 0) {
+            fbq("track", "Purchase", { value: total, currency: "NPR", num_items: allItems.filter((i) => !i.isFree).reduce((s, i) => s + i.quantity, 0) });
+          }
+        }}
         className="flex h-11 items-center justify-center rounded-full bg-action text-sm font-black text-maroon-dark hover:opacity-90"
       >
         Order on WhatsApp
