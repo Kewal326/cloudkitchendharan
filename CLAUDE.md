@@ -65,7 +65,7 @@ export const discountTiers = [
 export const FREE_ITEM_OFFER_ENABLED = true;
 export const freeItemOffer = {
   minOrder: 1000,
-  label: "Free Momo + Cold Drink",
+  label: "Momo + Cold Drink",
   items: [
     { id: "momo",              name: "Momo",                  price: 120 },
     { id: "coke-fanta-sprite", name: "Coke / Fanta / Sprite", price: 60  },
@@ -93,6 +93,19 @@ Three card variants in `banners.js`: `"split"` (image right), `"bold"` (centered
 Popular → Breads → Sabji → Sweets & Desserts → Rice → Chinese & Momos → Satvik / Vrat Menu → Pizza & Pasta → Waffles → Burgers, Rolls & Sandwiches → Street Snacks → South Indian & Chilla → Beverages
 
 Satvik / Vrat Menu gets a special amber feature shelf via `VratFeatureShelf` in `MenuShelf.jsx`.
+
+## Meta Pixel (analytics)
+Pixel ID: `1770238610672732` — base code in `index.html`.
+
+Four events fired:
+| Event | Where | Key attributes |
+|-------|-------|----------------|
+| `PageView` | `index.html` on load | — |
+| `AddToCart` | `App.jsx` → `addItem` + variant picker | `content_name`, `content_ids`, `contents`, `value`, `currency` |
+| `InitiateCheckout` | `App.jsx` → `openCart` | `content_ids`, `contents`, `num_items`, `value`, `currency` |
+| `Purchase` | `Cart.jsx` → WhatsApp button click | `content_ids`, `contents`, `num_items`, `value`, `currency` |
+
+All events wrapped in `typeof fbq !== "undefined"` guard. Free items (`isFree: true`) are excluded from all pixel events. `content_ids` use the item's slugified `id` field.
 
 ## Workflow rules
 - **Never commit or push without the owner explicitly asking.** This is a live production app.
