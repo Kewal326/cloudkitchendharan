@@ -184,7 +184,7 @@ export default function App() {
     setCart((current) => changeQuantity(current, item, 1));
     triggerCartShake();
     if (typeof fbq !== "undefined") {
-      fbq("track", "AddToCart", { value: item.price, currency: "NPR", content_name: item.name });
+      fbq("track", "AddToCart", { value: item.price, currency: "NPR", content_name: item.name, content_ids: [item.id], contents: [{ id: item.id, quantity: 1 }], content_type: "product" });
     }
   }
 
@@ -218,7 +218,15 @@ export default function App() {
     setIsCartOpen(true);
     openCartUrl();
     if (typeof fbq !== "undefined" && cartCount > 0) {
-      fbq("track", "InitiateCheckout", { value: subtotal, currency: "NPR", num_items: cartCount });
+      const paidItems = Object.values(cart).filter((i) => !i.isFree);
+      fbq("track", "InitiateCheckout", {
+        value: subtotal,
+        currency: "NPR",
+        num_items: cartCount,
+        content_ids: paidItems.map((i) => i.id),
+        contents: paidItems.map((i) => ({ id: i.id, quantity: i.quantity, item_price: i.price })),
+        content_type: "product",
+      });
     }
   }
 
@@ -413,7 +421,7 @@ export default function App() {
           triggerCartShake();
           setVariantItem(null);
           if (typeof fbq !== "undefined") {
-            fbq("track", "AddToCart", { value: v.price, currency: "NPR", content_name: v.name });
+            fbq("track", "AddToCart", { value: v.price, currency: "NPR", content_name: v.name, content_ids: [v.id], contents: [{ id: v.id, quantity: 1 }], content_type: "product" });
           }
         }}
         onClose={() => setVariantItem(null)}

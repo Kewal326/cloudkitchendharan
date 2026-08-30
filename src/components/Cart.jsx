@@ -156,6 +156,7 @@ function CartItems({ cart, onAdd, onRemove, notes, onNotesChange, onAddRecommend
 function CartFooterActions({ cart, notes }) {
   const allItems = Object.values(cart);
   const freeItems = allItems.filter((item) => item.isFree);
+  const paidItems = allItems.filter((item) => !item.isFree);
   const subtotal = getCartSubtotal(cart);
   const discount = getDiscount(subtotal);
   const total = subtotal - discount;
@@ -197,8 +198,15 @@ function CartFooterActions({ cart, notes }) {
         target="_blank"
         rel="noreferrer"
         onClick={() => {
-          if (typeof fbq !== "undefined" && allItems.length > 0) {
-            fbq("track", "Purchase", { value: total, currency: "NPR", num_items: allItems.filter((i) => !i.isFree).reduce((s, i) => s + i.quantity, 0) });
+          if (typeof fbq !== "undefined" && paidItems.length > 0) {
+            fbq("track", "Purchase", {
+              value: total,
+              currency: "NPR",
+              num_items: paidItems.reduce((s, i) => s + i.quantity, 0),
+              content_ids: paidItems.map((i) => i.id),
+              contents: paidItems.map((i) => ({ id: i.id, quantity: i.quantity, item_price: i.price })),
+              content_type: "product",
+            });
           }
         }}
         className="flex h-11 items-center justify-center rounded-full bg-action text-sm font-black text-maroon-dark hover:opacity-90"
